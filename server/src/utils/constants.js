@@ -29,3 +29,7 @@ export const RATE_LIMITS = {
   auth: { windowSeconds: 60, maxRequests: 10 },
   createMonitor: { windowSeconds: 60, maxRequests: 20 },
 };
+
+export const INCIDENT_RULES = {
+  failureThreshold: 2,
+};

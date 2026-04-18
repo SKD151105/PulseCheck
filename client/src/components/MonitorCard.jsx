@@ -36,7 +36,7 @@ const formatLastChecked = (value) => {
   return `${days} day ago`;
 };
 
-export default function MonitorCard({ monitor, flashKey, onDelete }) {
+export default function MonitorCard({ monitor, flashKey, onDelete, onOpen }) {
   const [isFlashing, setIsFlashing] = useState(false);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function MonitorCard({ monitor, flashKey, onDelete }) {
   }, [flashKey]);
 
   return (
-    <div className="monitor-card">
+    <div className="monitor-card" role="button" tabIndex={0} onClick={() => onOpen(monitor.id)} onKeyDown={(event) => event.key === "Enter" && onOpen(monitor.id)}>
       <div className="monitor-card__left">
         <span className={`monitor-card__dot monitor-card__dot--${monitor.status.toLowerCase()}`} />
         <span className="monitor-card__url" title={monitor.url}>
@@ -61,7 +61,7 @@ export default function MonitorCard({ monitor, flashKey, onDelete }) {
 
       <div className="monitor-card__center">
         <span className={`monitor-card__response ${isFlashing ? "monitor-card__response--flash" : ""}`}>
-          {typeof monitor.lastResponseTime === "number" ? `${monitor.lastResponseTime}ms` : "—"}
+          {typeof monitor.lastResponseTime === "number" ? `${monitor.lastResponseTime}ms` : "--"}
         </span>
         <span className="monitor-card__interval">every {monitor.interval}m</span>
       </div>
@@ -71,7 +71,14 @@ export default function MonitorCard({ monitor, flashKey, onDelete }) {
           {monitor.status}
         </span>
         <span className="monitor-card__checked">{formatLastChecked(monitor.lastCheckedAt)}</span>
-        <button className="monitor-card__delete" onClick={() => onDelete(monitor.id)} aria-label="Delete monitor">
+        <button
+          className="monitor-card__delete"
+          onClick={(event) => {
+            event.stopPropagation();
+            onDelete(monitor.id);
+          }}
+          aria-label="Delete monitor"
+        >
           <TrashIcon />
         </button>
       </div>

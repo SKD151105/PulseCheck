@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import StatBar from "../components/StatBar";
 import AddMonitorForm from "../components/AddMonitorForm";
 import MonitorCard from "../components/MonitorCard";
+import MonitorDetailsModal from "../components/MonitorDetailsModal";
 import Skeleton from "../components/Skeleton";
 import AnalyticsSection from "../components/AnalyticsSection";
 import { useToast } from "../context/ToastContext";
@@ -34,11 +35,15 @@ export default function Dashboard() {
   const [flashMap, setFlashMap] = useState({});
   const [networkError, setNetworkError] = useState("");
   const [analytics, setAnalytics] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMonitorId, setSelectedMonitorId] = useState(null);
   const analyticsTimerRef = useRef(null);
 
-  const loadMonitors = async () => {
+  const loadMonitors = async (search = "") => {
     try {
-      const response = await api.get("/monitors");
+      const response = await api.get("/monitors", {
+        params: search ? { search } : {},
+      });
       setMonitors(response.data.monitors);
       setNetworkError("");
     } catch (error) {
@@ -62,6 +67,14 @@ export default function Dashboard() {
     loadMonitors();
     loadAnalytics();
   }, []);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      loadMonitors(searchQuery);
+    }, 250);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   useEffect(() => {
     return () => {
@@ -113,7 +126,7 @@ export default function Dashboard() {
 
     try {
       const response = await api.post("/monitors", payload);
-      setMonitors((current) => [response.data.monitor, ...current]);
+      await loadMonitors(searchQuery);
       addToast({
         type: "success",
         title: "Monitor added",
@@ -130,12 +143,15 @@ export default function Dashboard() {
   const handleDeleteMonitor = async (monitorId) => {
     try {
       const response = await api.delete(`/monitors/${monitorId}`);
-      setMonitors((current) => current.filter((monitor) => monitor.id !== monitorId));
+      await loadMonitors(searchQuery);
       addToast({
         type: "info",
         title: "Monitor deleted",
         message: response.data.monitor.url,
       });
+      if (selectedMonitorId === monitorId) {
+        setSelectedMonitorId(null);
+      }
       loadAnalytics();
     } catch (error) {
       addToast({
@@ -177,8 +193,17 @@ export default function Dashboard() {
           <AnalyticsSection analytics={analytics} isLoading={isLoading} />
 
           <section className="dashboard-section" id="monitors">
-            <div className="dashboard-section__heading">
-              Monitors <span>({monitors.length})</span>
+            <div className="dashboard-section__topbar">
+              <div className="dashboard-section__heading">
+                Monitors <span>({monitors.length})</span>
+              </div>
+              <input
+                className="dashboard-search"
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search monitors by URL"
+              />
             </div>
 
             {isLoading ? (
@@ -195,6 +220,7 @@ export default function Dashboard() {
                     monitor={monitor}
                     flashKey={flashMap[monitor.id]}
                     onDelete={handleDeleteMonitor}
+                    onOpen={setSelectedMonitorId}
                   />
                 ))}
               </div>
@@ -202,6 +228,19 @@ export default function Dashboard() {
               <EmptyState />
             )}
           </section>
+
+          {selectedMonitorId ? (
+            <MonitorDetailsModal
+              monitorId={selectedMonitorId}
+              plan={user?.plan}
+              socket={socket}
+              onClose={() => setSelectedMonitorId(null)}
+              onUpdated={() => {
+                loadMonitors(searchQuery);
+                loadAnalytics();
+              }}
+            />
+          ) : null}
         </div>
       </main>
     </div>

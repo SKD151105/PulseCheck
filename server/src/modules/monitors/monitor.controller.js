@@ -7,8 +7,18 @@ export const monitorController = {
   },
 
   async list(req, res) {
-    const monitors = await monitorService.getUserMonitors(req.user.id);
+    const monitors = await monitorService.getUserMonitors(req.user.id, req.query.search || "");
     res.json({ monitors });
+  },
+
+  async details(req, res) {
+    const details = await monitorService.getMonitorDetails(req.user.id, req.params.monitorId);
+    res.json({ details });
+  },
+
+  async update(req, res) {
+    const monitor = await monitorService.updateMonitor(req.user.id, req.params.monitorId, req.body);
+    res.json({ monitor });
   },
 
   async remove(req, res) {

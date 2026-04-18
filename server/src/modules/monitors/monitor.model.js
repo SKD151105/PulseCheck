@@ -31,6 +31,14 @@ const monitorSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
+    consecutiveFailures: {
+      type: Number,
+      default: 0,
+    },
+    failureStreakStartedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

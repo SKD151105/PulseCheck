@@ -15,6 +15,8 @@ const monitorRateLimit = createRateLimitMiddleware(
 router.use(authMiddleware);
 router.get("/", asyncHandler(monitorController.list));
 router.post("/", monitorRateLimit, asyncHandler(monitorController.create));
+router.get("/:monitorId/details", asyncHandler(monitorController.details));
+router.patch("/:monitorId", asyncHandler(monitorController.update));
 router.delete("/:monitorId", asyncHandler(monitorController.remove));
 
 export default router;

@@ -1,0 +1,218 @@
+.monitor-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.28);
+}
+
+.monitor-modal__card {
+  width: min(1080px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--bg-card);
+}
+
+.monitor-modal__header,
+.monitor-modal__actions,
+.monitor-modal__edit,
+.monitor-modal__timeline-item,
+.monitor-modal__check-row {
+  display: flex;
+}
+
+.monitor-modal__header {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.monitor-modal__eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.monitor-modal__title {
+  margin: 8px 0 0;
+  font-size: 28px;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.monitor-modal__actions {
+  gap: 10px;
+}
+
+.monitor-modal__button {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.monitor-modal__button--primary {
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+}
+
+.monitor-modal__button--secondary {
+  background: transparent;
+}
+
+.monitor-modal__edit {
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.monitor-modal__input {
+  flex: 1;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+
+.monitor-modal__input--select {
+  flex: 0 0 140px;
+}
+
+.monitor-modal__metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.monitor-modal__metric {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.monitor-modal__metric-label,
+.monitor-modal__section-title,
+.monitor-modal__timeline-meta {
+  color: var(--text-secondary);
+}
+
+.monitor-modal__metric-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.monitor-modal__metric-value {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.monitor-modal__charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.monitor-modal__section {
+  margin-top: 22px;
+}
+
+.monitor-modal__section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.monitor-modal__timeline,
+.monitor-modal__checks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.monitor-modal__timeline-item,
+.monitor-modal__check-row {
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.monitor-modal__timeline-status {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.monitor-modal__timeline-duration {
+  font-weight: 600;
+}
+
+.monitor-modal__check-status {
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.monitor-modal__check-status--up {
+  background: var(--status-up-bg);
+  color: var(--status-up);
+}
+
+.monitor-modal__check-status--down {
+  background: var(--status-down-bg);
+  color: var(--status-down);
+}
+
+.monitor-modal__empty,
+.monitor-modal__error {
+  margin-top: 16px;
+}
+
+.monitor-modal__error {
+  color: var(--status-down);
+}
+
+@media (max-width: 960px) {
+  .monitor-modal__metrics,
+  .monitor-modal__charts,
+  .monitor-modal__edit {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .monitor-modal__actions,
+  .monitor-modal__header,
+  .monitor-modal__timeline-item,
+  .monitor-modal__check-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .monitor-modal__input--select,
+  .monitor-modal__button {
+    width: 100%;
+  }
+}

@@ -1,5 +1,7 @@
 import { monitorRepository } from "./monitor.repository.js";
 import { authRepository } from "../auth/auth.repository.js";
+import { checkRepository } from "../checks/check.repository.js";
+import { incidentRepository } from "../incidents/incident.repository.js";
 import { ApiError } from "../../utils/ApiError.js";
 import {
   CACHE_KEYS,
@@ -32,6 +34,7 @@ const serializeMonitor = (monitor) => ({
   status: monitor.status,
   lastCheckedAt: monitor.lastCheckedAt,
   lastResponseTime: monitor.lastResponseTime,
+  consecutiveFailures: monitor.consecutiveFailures ?? 0,
   createdAt: monitor.createdAt,
   updatedAt: monitor.updatedAt,
 });
@@ -85,21 +88,124 @@ export const monitorService = {
     return serializeMonitor(monitor);
   },
 
-  async getUserMonitors(userId) {
+  async getUserMonitors(userId, search = "") {
     const redis = getRedis();
-    const cacheKey = CACHE_KEYS.monitors(userId);
-    const cachedValue = await redis.get(cacheKey);
+    const normalizedSearch = search.trim();
+    const cacheKey = normalizedSearch ? null : CACHE_KEYS.monitors(userId);
+    const cachedValue = cacheKey ? await redis.get(cacheKey) : null;
 
     if (cachedValue) {
       return JSON.parse(cachedValue);
     }
 
-    const monitors = await monitorRepository.findByUserId(userId);
+    const monitors = normalizedSearch
+      ? await monitorRepository.findByUserIdAndSearch(userId, normalizedSearch)
+      : await monitorRepository.findByUserId(userId);
     const serialized = monitors.map(serializeMonitor);
 
-    await redis.set(cacheKey, JSON.stringify(serialized), "EX", CACHE_TTL.monitors);
+    if (cacheKey) {
+      await redis.set(cacheKey, JSON.stringify(serialized), "EX", CACHE_TTL.monitors);
+    }
 
     return serialized;
+  },
+
+  async updateMonitor(userId, monitorId, payload) {
+    const existingMonitor = await monitorRepository.findByIdAndUserId(monitorId, userId);
+
+    if (!existingMonitor) {
+      throw new ApiError(404, "Monitor not found");
+    }
+
+    const nextInterval = payload.interval !== undefined ? Number(payload.interval) : existingMonitor.interval;
+    const nextUrl = payload.url !== undefined ? normalizeUrl(payload.url.trim()) : existingMonitor.url;
+
+    if (!MONITOR_INTERVAL_OPTIONS.includes(nextInterval)) {
+      throw new ApiError(400, "Unsupported interval value");
+    }
+
+    const { limits } = await getPlanLimits(userId);
+
+    if (nextInterval < limits.minInterval) {
+      throw new ApiError(403, `Your plan supports intervals of ${limits.minInterval} minutes or more`);
+    }
+
+    const monitor = await monitorRepository.updateByIdAndUserId(monitorId, userId, {
+      url: nextUrl,
+      interval: nextInterval,
+    });
+
+    await clearMonitorCache(userId);
+    logger.info("Monitor updated", { userId, monitorId, url: nextUrl, interval: nextInterval });
+
+    return serializeMonitor(monitor);
+  },
+
+  async getMonitorDetails(userId, monitorId) {
+    const monitor = await monitorRepository.findByIdAndUserId(monitorId, userId);
+
+    if (!monitor) {
+      throw new ApiError(404, "Monitor not found");
+    }
+
+    const now = new Date();
+    const since24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const since7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    const [summary24h, summary7d, recentChecks, incidents, responseTrend, uptimeTrend] = await Promise.all([
+      checkRepository.getMonitorSummary(monitor._id, since24h),
+      checkRepository.getMonitorSummary(monitor._id, since7d),
+      checkRepository.findRecentByMonitorId(monitor._id, 30),
+      incidentRepository.findRecentByMonitorId(monitor._id, 12),
+      checkRepository.getResponseTrend(monitor._id, since24h, 20),
+      checkRepository.getDailyUptimeTrend(monitor._id, since7d),
+    ]);
+
+    const toPercent = (summary) =>
+      summary?.totalChecks ? Number(((summary.upChecks / summary.totalChecks) * 100).toFixed(1)) : null;
+
+    const formatIncident = (incident) => ({
+      id: incident._id.toString(),
+      startedAt: incident.startedAt,
+      resolvedAt: incident.resolvedAt,
+      durationMs: incident.durationMs ?? null,
+      isOpen: !incident.resolvedAt,
+    });
+
+    return {
+      monitor: serializeMonitor(monitor),
+      summary: {
+        uptime24h: toPercent(summary24h),
+        uptime7d: toPercent(summary7d),
+        avgResponse24h: summary24h?.avgResponseTime ? Math.round(summary24h.avgResponseTime) : null,
+        avgResponse7d: summary7d?.avgResponseTime ? Math.round(summary7d.avgResponseTime) : null,
+        checks24h: summary24h?.totalChecks ?? 0,
+        checks7d: summary7d?.totalChecks ?? 0,
+        incidentCount: incidents.length,
+      },
+      trends: {
+        response24h: responseTrend
+          .slice()
+          .reverse()
+          .map((item) => ({
+            checkedAt: item.checkedAt,
+            responseTime: item.responseTime,
+          })),
+        uptime7d: uptimeTrend.map((item) => ({
+          label: `${item._id.day}/${item._id.month}`,
+          uptimePercentage: item.totalChecks ? Number(((item.upChecks / item.totalChecks) * 100).toFixed(1)) : null,
+          totalChecks: item.totalChecks,
+          failures: item.totalChecks - item.upChecks,
+        })),
+      },
+      recentChecks: recentChecks.map((item) => ({
+        id: item._id.toString(),
+        status: item.status,
+        responseTime: item.responseTime,
+        checkedAt: item.checkedAt,
+      })),
+      incidents: incidents.map(formatIncident),
+    };
   },
 
   async deleteMonitor(userId, monitorId) {

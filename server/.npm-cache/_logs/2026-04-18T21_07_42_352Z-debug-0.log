@@ -1,0 +1,85 @@
+0 verbose cli C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.7.0
+2 info using node@v22.18.0
+3 silly config load:file:C:\Users\Administrator\AppData\Local\nvm\v22.18.0\node_modules\npm\npmrc
+4 silly config load:file:D:\WEB DEVELOPMENT PRO\PROJECTS\PulseCheck\server\.npmrc
+5 silly config load:file:C:\Users\Administrator\.npmrc
+6 silly config load:file:C:\nvm4w\nodejs\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" ".npm-cache" "--no-audit" "--no-fund" "--ignore-scripts"
+9 verbose logfile logs-max:10 dir:D:\WEB DEVELOPMENT PRO\PROJECTS\PulseCheck\server\.npm-cache\_logs\2026-04-18T21_07_42_352Z-
+10 verbose logfile D:\WEB DEVELOPMENT PRO\PROJECTS\PulseCheck\server\.npm-cache\_logs\2026-04-18T21_07_42_352Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 silly fetch manifest nodemailer@^6.10.1
+15 silly packumentCache full:https://registry.npmjs.org/nodemailer cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/nodemailer 439ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/nodemailer set size:undefined disposed:false
+18 silly fetch manifest twilio@^5.10.3
+19 silly packumentCache full:https://registry.npmjs.org/twilio cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/twilio 858ms (cache miss)
+21 silly packumentCache full:https://registry.npmjs.org/twilio set size:undefined disposed:false
+22 silly placeDep ROOT nodemailer@6.10.1 OK for: pulsecheck-server@1.0.0 want: ^6.10.1
+23 silly placeDep ROOT twilio@5.13.1 OK for: pulsecheck-server@1.0.0 want: ^5.10.3
+24 silly fetch manifest dayjs@^1.11.9
+25 silly packumentCache full:https://registry.npmjs.org/dayjs cache-miss
+26 silly fetch manifest https-proxy-agent@^5.0.0
+27 silly packumentCache full:https://registry.npmjs.org/https-proxy-agent cache-miss
+28 silly fetch manifest scmp@^2.1.0
+29 silly packumentCache full:https://registry.npmjs.org/scmp cache-miss
+30 silly fetch manifest xmlbuilder@^13.0.2
+31 silly packumentCache full:https://registry.npmjs.org/xmlbuilder cache-miss
+32 http fetch GET 200 https://registry.npmjs.org/dayjs 88ms (cache miss)
+33 silly packumentCache full:https://registry.npmjs.org/dayjs set size:undefined disposed:false
+34 http fetch GET 200 https://registry.npmjs.org/https-proxy-agent 241ms (cache miss)
+35 silly packumentCache full:https://registry.npmjs.org/https-proxy-agent set size:undefined disposed:false
+36 http fetch GET 200 https://registry.npmjs.org/xmlbuilder 243ms (cache miss)
+37 silly packumentCache full:https://registry.npmjs.org/xmlbuilder set size:undefined disposed:false
+38 http fetch GET 200 https://registry.npmjs.org/scmp 516ms (cache miss)
+39 silly packumentCache full:https://registry.npmjs.org/scmp set size:undefined disposed:false
+40 silly placeDep ROOT dayjs@1.11.20 OK for: twilio@5.13.1 want: ^1.11.9
+41 silly placeDep ROOT https-proxy-agent@5.0.1 OK for: twilio@5.13.1 want: ^5.0.0
+42 silly placeDep ROOT scmp@2.1.0 OK for: twilio@5.13.1 want: ^2.1.0
+43 silly placeDep ROOT xmlbuilder@13.0.2 OK for: twilio@5.13.1 want: ^13.0.2
+44 silly fetch manifest agent-base@6
+45 silly packumentCache full:https://registry.npmjs.org/agent-base cache-miss
+46 http fetch GET 200 https://registry.npmjs.org/agent-base 77ms (cache miss)
+47 silly packumentCache full:https://registry.npmjs.org/agent-base set size:undefined disposed:false
+48 silly placeDep ROOT agent-base@6.0.2 OK for: https-proxy-agent@5.0.1 want: 6
+49 silly reify moves {}
+50 http cache agent-base@https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz 1ms (cache hit)
+51 http cache xmlbuilder@https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-13.0.2.tgz 0ms (cache hit)
+52 http cache https-proxy-agent@https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz 0ms (cache hit)
+53 http cache scmp@https://registry.npmjs.org/scmp/-/scmp-2.1.0.tgz 0ms (cache hit)
+54 http cache dayjs@https://registry.npmjs.org/dayjs/-/dayjs-1.11.20.tgz 0ms (cache hit)
+55 http cache nodemailer@https://registry.npmjs.org/nodemailer/-/nodemailer-6.10.1.tgz 0ms (cache hit)
+56 http cache twilio@https://registry.npmjs.org/twilio/-/twilio-5.13.1.tgz 0ms (cache hit)
+57 silly tarball no local data for agent-base@https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz. Extracting by manifest.
+58 silly tarball no local data for xmlbuilder@https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-13.0.2.tgz. Extracting by manifest.
+59 silly tarball no local data for https-proxy-agent@https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz. Extracting by manifest.
+60 silly tarball no local data for scmp@https://registry.npmjs.org/scmp/-/scmp-2.1.0.tgz. Extracting by manifest.
+61 silly tarball no local data for dayjs@https://registry.npmjs.org/dayjs/-/dayjs-1.11.20.tgz. Extracting by manifest.
+62 silly tarball no local data for nodemailer@https://registry.npmjs.org/nodemailer/-/nodemailer-6.10.1.tgz. Extracting by manifest.
+63 silly tarball no local data for twilio@https://registry.npmjs.org/twilio/-/twilio-5.13.1.tgz. Extracting by manifest.
+64 http fetch GET 200 https://registry.npmjs.org/scmp/-/scmp-2.1.0.tgz 103ms (cache miss)
+65 warn deprecated scmp@2.1.0: Just use Node.js's crypto.timingSafeEqual()
+66 http fetch GET 200 https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz 131ms (cache miss)
+67 http fetch GET 200 https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz 130ms (cache miss)
+68 http fetch GET 200 https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-13.0.2.tgz 186ms (cache miss)
+69 http fetch GET 200 https://registry.npmjs.org/nodemailer/-/nodemailer-6.10.1.tgz 376ms (cache miss)
+70 http fetch GET 200 https://registry.npmjs.org/dayjs/-/dayjs-1.11.20.tgz 1128ms (cache miss)
+71 http fetch GET 200 https://registry.npmjs.org/twilio/-/twilio-5.13.1.tgz 3601ms (cache miss)
+72 silly ADD node_modules/agent-base
+73 silly ADD node_modules/xmlbuilder
+74 silly ADD node_modules/scmp
+75 silly ADD node_modules/https-proxy-agent
+76 silly ADD node_modules/dayjs
+77 silly ADD node_modules/twilio
+78 silly ADD node_modules/nodemailer
+79 verbose cwd D:\WEB DEVELOPMENT PRO\PROJECTS\PulseCheck\server
+80 verbose os Windows_NT 10.0.26200
+81 verbose node v22.18.0
+82 verbose npm  v11.7.0
+83 verbose exit 0
+84 info ok
