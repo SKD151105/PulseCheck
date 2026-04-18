@@ -12,7 +12,7 @@ PulseCheck is a full-stack MERN uptime monitoring SaaS with a layered Node.js ba
 - Redis rate limiting on auth and monitor creation
 - Redis monitor list caching with short TTL
 - Socket.io real-time monitor updates and status change events
-- Dark SaaS dashboard with skeleton loading and custom toast notifications
+- SaaS dashboard with skeleton loading and custom toast notifications
 
 ## Tech Stack
 
