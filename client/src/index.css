@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --bg-base: #f5f7fb;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f2f5ff;
+  --bg-input: #f8faff;
+  --border: #d9e0ee;
+  --border-strong: #c8d2e5;
+  --border-focus: #4063eb;
+  --text-primary: #162033;
+  --text-secondary: #5c6880;
+  --text-muted: #8b95a7;
+  --accent: #4063eb;
+  --accent-hover: #3456d8;
+  --status-up: #22c55e;
+  --status-down: #ef4444;
+  --status-up-bg: rgba(34, 197, 94, 0.08);
+  --status-down-bg: rgba(239, 68, 68, 0.08);
+  --warning-bg: #fff7e8;
+  --warning-border: #f3d49c;
+  --warning-text: #a56708;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  background:
+    radial-gradient(circle at top left, rgba(64, 99, 235, 0.08), transparent 28%),
+    linear-gradient(180deg, #f8faff 0%, #f5f7fb 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--border);
+}
+
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+
+  100% {
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+  }
+}

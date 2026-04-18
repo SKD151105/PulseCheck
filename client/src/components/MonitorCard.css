@@ -1,0 +1,145 @@
+.monitor-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.monitor-card__left,
+.monitor-card__center,
+.monitor-card__right {
+  display: flex;
+  align-items: center;
+}
+
+.monitor-card__left {
+  min-width: 0;
+  flex: 1;
+  gap: 12px;
+}
+
+.monitor-card__center {
+  min-width: 120px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.monitor-card__right {
+  gap: 12px;
+}
+
+.monitor-card__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  transition: background-color 0.3s ease;
+}
+
+.monitor-card__dot--up {
+  background: var(--status-up);
+  animation: pulse-green 2s infinite;
+}
+
+.monitor-card__dot--down {
+  background: var(--status-down);
+}
+
+.monitor-card__dot--pending {
+  background: var(--text-muted);
+}
+
+.monitor-card__url,
+.monitor-card__response {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 13px;
+}
+
+.monitor-card__url {
+  max-width: 320px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+
+.monitor-card__response {
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  transition: background-color 0.15s ease;
+}
+
+.monitor-card__response--flash {
+  background: rgba(64, 99, 235, 0.1);
+}
+
+.monitor-card__interval,
+.monitor-card__checked {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.monitor-card__badge {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.monitor-card__badge--up {
+  border-color: rgba(34, 197, 94, 0.2);
+  background: var(--status-up-bg);
+  color: var(--status-up);
+}
+
+.monitor-card__badge--down {
+  border-color: rgba(239, 68, 68, 0.2);
+  background: var(--status-down-bg);
+  color: var(--status-down);
+}
+
+.monitor-card__badge--pending {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.monitor-card__delete {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.monitor-card__delete svg {
+  width: 16px;
+  height: 16px;
+}
+
+.monitor-card__delete:hover {
+  background: var(--status-down-bg);
+  color: var(--status-down);
+}
+
+@media (max-width: 960px) {
+  .monitor-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .monitor-card__center,
+  .monitor-card__right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
