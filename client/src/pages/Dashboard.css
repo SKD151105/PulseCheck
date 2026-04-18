@@ -42,7 +42,7 @@
 
 .dashboard-hero__text {
   max-width: 620px;
-  margin: 6px 0 0;
+  margin: 6px 0 1px 0;
   color: var(--text-secondary);
 }
 
