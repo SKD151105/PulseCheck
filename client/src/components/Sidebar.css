@@ -1,12 +1,16 @@
 .sidebar {
+  position: sticky;
+  top: 0;
+  flex: 0 0 220px;
   width: 220px;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 24px 16px;
   border-right: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.82);
+  overflow: hidden;
 }
 
 .sidebar__brand {
@@ -99,10 +103,13 @@
 
 @media (max-width: 960px) {
   .sidebar {
+    position: static;
+    flex: none;
     width: 100%;
-    min-height: auto;
+    height: auto;
     padding: 20px;
     border-right: 0;
     border-bottom: 1px solid var(--border);
+    overflow: visible;
   }
 }
