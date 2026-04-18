@@ -101,6 +101,69 @@
   color: var(--status-down);
 }
 
+.sidebar-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(16, 24, 40, 0.24);
+}
+
+.sidebar-modal__card {
+  width: min(100%, 360px);
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card);
+}
+
+.sidebar-modal__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sidebar-modal__text {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+}
+
+.sidebar-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.sidebar-modal__button {
+  min-width: 90px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.sidebar-modal__button--secondary:hover {
+  background: var(--bg-card-hover);
+}
+
+.sidebar-modal__button--danger {
+  border-color: rgba(239, 68, 68, 0.18);
+  background: var(--status-down);
+  color: #fff;
+}
+
+.sidebar-modal__button--danger:hover {
+  filter: brightness(0.96);
+}
+
 @media (max-width: 960px) {
   .sidebar {
     position: static;
