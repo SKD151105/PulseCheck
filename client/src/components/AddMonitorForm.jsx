@@ -25,6 +25,7 @@ export default function AddMonitorForm({ plan, isSubmitting, onSubmit }) {
 
   return (
     <form className="add-monitor-card" onSubmit={handleSubmit}>
+      <div className="add-monitor-note">Enter a URL and choose how often PulseCheck should check it.</div>
       <div className="add-monitor-row">
         <input
           className="add-monitor-input"

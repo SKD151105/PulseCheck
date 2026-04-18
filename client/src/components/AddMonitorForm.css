@@ -5,6 +5,12 @@
   background: rgba(255, 255, 255, 0.84);
 }
 
+.add-monitor-note {
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
 .add-monitor-row {
   display: flex;
   gap: 10px;
