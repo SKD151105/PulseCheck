@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import StatBar from "../components/StatBar";
 import AddMonitorForm from "../components/AddMonitorForm";
 import MonitorCard from "../components/MonitorCard";
 import Skeleton from "../components/Skeleton";
+import AnalyticsSection from "../components/AnalyticsSection";
 import { useToast } from "../context/ToastContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
@@ -32,6 +33,8 @@ export default function Dashboard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [flashMap, setFlashMap] = useState({});
   const [networkError, setNetworkError] = useState("");
+  const [analytics, setAnalytics] = useState(null);
+  const analyticsTimerRef = useRef(null);
 
   const loadMonitors = async () => {
     try {
@@ -45,8 +48,27 @@ export default function Dashboard() {
     }
   };
 
+  const loadAnalytics = async () => {
+    try {
+      const response = await api.get("/analytics");
+      setAnalytics(response.data.analytics);
+      setNetworkError("");
+    } catch (error) {
+      setNetworkError(error.response?.data?.message || "Unable to load analytics");
+    }
+  };
+
   useEffect(() => {
     loadMonitors();
+    loadAnalytics();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (analyticsTimerRef.current) {
+        window.clearTimeout(analyticsTimerRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -59,6 +81,14 @@ export default function Dashboard() {
         current.map((monitor) => (monitor.id === payload.id ? { ...monitor, ...payload } : monitor))
       );
       setFlashMap((current) => ({ ...current, [payload.id]: Date.now() }));
+
+      if (analyticsTimerRef.current) {
+        window.clearTimeout(analyticsTimerRef.current);
+      }
+
+      analyticsTimerRef.current = window.setTimeout(() => {
+        loadAnalytics();
+      }, 400);
     };
 
     const handleStatusChange = (payload) => {
@@ -89,6 +119,7 @@ export default function Dashboard() {
         title: "Monitor added",
         message: response.data.monitor.url,
       });
+      loadAnalytics();
     } catch (error) {
       throw error;
     } finally {
@@ -105,6 +136,7 @@ export default function Dashboard() {
         title: "Monitor deleted",
         message: response.data.monitor.url,
       });
+      loadAnalytics();
     } catch (error) {
       addToast({
         type: "error",
@@ -141,6 +173,8 @@ export default function Dashboard() {
           {bannerMessage ? <div className="dashboard-banner">{bannerMessage}</div> : null}
 
           <AddMonitorForm plan={user?.plan} isSubmitting={isSubmitting} onSubmit={handleCreateMonitor} />
+
+          <AnalyticsSection analytics={analytics} isLoading={isLoading} />
 
           <section className="dashboard-section" id="monitors">
             <div className="dashboard-section__heading">

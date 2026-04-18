@@ -23,14 +23,14 @@ export default function Sidebar() {
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isLogoutOpen]);
 
-  const handleScrollToMonitors = (event) => {
+  const handleScrollToSection = (event, sectionId) => {
     event.preventDefault();
 
-    const section = document.getElementById("monitors");
+    const section = document.getElementById(sectionId);
 
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.history.replaceState(null, "", "#monitors");
+      window.history.replaceState(null, "", `#${sectionId}`);
     }
   };
 
@@ -52,7 +52,18 @@ export default function Sidebar() {
             <NavLink to="/" end className="sidebar__nav-link">
               Dashboard
             </NavLink>
-            <a href="#monitors" className="sidebar__nav-link" onClick={handleScrollToMonitors}>
+            <a
+              href="#analytics"
+              className="sidebar__nav-link"
+              onClick={(event) => handleScrollToSection(event, "analytics")}
+            >
+              Analytics
+            </a>
+            <a
+              href="#monitors"
+              className="sidebar__nav-link"
+              onClick={(event) => handleScrollToSection(event, "monitors")}
+            >
               Monitors
             </a>
           </nav>
