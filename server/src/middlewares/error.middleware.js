@@ -1,4 +1,5 @@
 import { ApiError } from "../utils/ApiError.js";
+import { logger } from "../utils/logger.js";
 
 export const notFoundMiddleware = (_req, _res, next) => {
   next(new ApiError(404, "Route not found"));
@@ -31,7 +32,11 @@ export const errorMiddleware = (error, _req, res, _next) => {
     });
   }
 
-  console.error(error);
+  logger.error("Unhandled application error", {
+    name: error.name,
+    message: error.message,
+    stack: error.stack,
+  });
 
   return res.status(500).json({
     message: "Internal server error",

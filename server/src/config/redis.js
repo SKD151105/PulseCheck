@@ -1,4 +1,5 @@
 import Redis from "ioredis";
+import { logger } from "../utils/logger.js";
 
 let redis;
 
@@ -13,11 +14,11 @@ export const connectRedis = () => {
   });
 
   redis.on("connect", () => {
-    console.log("Redis connected");
+    logger.info("Redis connected");
   });
 
   redis.on("error", (error) => {
-    console.error("Redis error:", error.message);
+    logger.error("Redis error", { message: error.message });
   });
 
   return redis;

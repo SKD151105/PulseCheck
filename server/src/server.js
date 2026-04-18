@@ -5,8 +5,10 @@ import { connectDb } from "./config/db.js";
 import { connectRedis } from "./config/redis.js";
 import { createSocketServer } from "./sockets/socket.js";
 import { startMonitorWorker } from "./workers/monitor.worker.js";
+import { logger } from "./utils/logger.js";
 
 const bootstrap = async () => {
+  logger.info("Starting PulseCheck server");
   await connectDb();
   connectRedis();
 
@@ -19,11 +21,11 @@ const bootstrap = async () => {
   const port = process.env.PORT || 5000;
 
   server.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    logger.info("Server listening", { port });
   });
 };
 
 bootstrap().catch((error) => {
-  console.error("Failed to start server:", error.message);
+  logger.error("Failed to start server", { message: error.message });
   process.exit(1);
 });

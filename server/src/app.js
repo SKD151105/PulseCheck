@@ -4,6 +4,7 @@ import authRoutes from "./modules/auth/auth.routes.js";
 import monitorRoutes from "./modules/monitors/monitor.routes.js";
 import subscriptionRoutes from "./modules/subscription/subscription.routes.js";
 import { errorMiddleware, notFoundMiddleware } from "./middlewares/error.middleware.js";
+import { requestLoggerMiddleware } from "./middlewares/request.middleware.js";
 
 export const createApp = () => {
   const app = express();
@@ -15,6 +16,7 @@ export const createApp = () => {
     })
   );
   app.use(express.json());
+  app.use(requestLoggerMiddleware);
 
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok" });

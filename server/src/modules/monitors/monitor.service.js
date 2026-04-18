@@ -8,6 +8,7 @@ import {
   PLAN_LIMITS,
 } from "../../utils/constants.js";
 import { getRedis } from "../../config/redis.js";
+import { logger } from "../../utils/logger.js";
 
 const normalizeUrl = (value) => {
   try {
@@ -79,6 +80,7 @@ export const monitorService = {
     });
 
     await clearMonitorCache(userId);
+    logger.info("Monitor created", { userId, monitorId: monitor.id, url, interval });
 
     return serializeMonitor(monitor);
   },
@@ -104,10 +106,12 @@ export const monitorService = {
     const monitor = await monitorRepository.deleteByIdAndUserId(monitorId, userId);
 
     if (!monitor) {
+      logger.warn("Monitor delete failed: not found", { userId, monitorId });
       throw new ApiError(404, "Monitor not found");
     }
 
     await clearMonitorCache(userId);
+    logger.info("Monitor deleted", { userId, monitorId: monitor._id?.toString?.() ?? monitor.id });
 
     return serializeMonitor(monitor);
   },

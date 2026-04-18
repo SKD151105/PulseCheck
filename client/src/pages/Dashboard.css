@@ -10,7 +10,8 @@
 
 .dashboard-shell {
   max-width: 1240px;
-  padding: 28px;
+  margin: 0 auto 0 8px;
+  padding: 28px 28px 28px 36px;
 }
 
 .dashboard-hero {

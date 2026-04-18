@@ -3,6 +3,7 @@ import { monitorRepository } from "../monitors/monitor.repository.js";
 import { checkRepository } from "./check.repository.js";
 import { getRedis } from "../../config/redis.js";
 import { CACHE_KEYS, MONITOR_INTERVAL_OPTIONS, MONITOR_STATUS } from "../../utils/constants.js";
+import { logger } from "../../utils/logger.js";
 
 const buildDueFilters = () =>
   MONITOR_INTERVAL_OPTIONS.map((interval) => ({
@@ -50,6 +51,7 @@ const checkMonitorHealth = async (monitor) => {
 export const checkService = {
   async processDueMonitors(io) {
     const dueMonitors = await monitorRepository.findDueMonitors(buildDueFilters());
+    logger.debug("Processing due monitors", { total: dueMonitors.length });
 
     await Promise.all(
       dueMonitors.map(async (monitor) => {
@@ -87,8 +89,20 @@ export const checkService = {
             },
             statusChanged
           );
+
+          logger.info("Monitor checked", {
+            monitorId: updatedMonitor._id.toString(),
+            userId: updatedMonitor.userId.toString(),
+            status: updatedMonitor.status,
+            responseTime: updatedMonitor.lastResponseTime,
+            statusChanged,
+          });
         } catch (error) {
-          console.error(`Monitor check failed for ${monitor.url}:`, error.message);
+          logger.error("Monitor check failed", {
+            monitorId: monitor._id.toString(),
+            url: monitor.url,
+            message: error.message,
+          });
         }
       })
     );

@@ -35,9 +35,6 @@ export default function Sidebar() {
 
       <div className="sidebar__footer">
         <div className="sidebar__user-email">{user?.email}</div>
-        <span className={`sidebar__plan sidebar__plan--${user?.plan?.toLowerCase()}`}>
-          {user?.plan}
-        </span>
         <button className="sidebar__logout" onClick={logout}>
           Logout
         </button>
