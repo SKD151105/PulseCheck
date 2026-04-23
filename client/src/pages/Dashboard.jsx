@@ -15,6 +15,8 @@ import api from "../services/api";
 import "./Dashboard.css";
 
 const MONITORS_PER_PAGE = 8;
+const BILLING_POLL_ATTEMPTS = 10;
+const BILLING_POLL_INTERVAL_MS = 2000;
 
 const EmptyState = () => (
   <div className="empty-state">
@@ -71,13 +73,31 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+    const billingTimers = [];
+
+    const pollBillingPlan = async () => {
+      for (let attempt = 0; attempt < BILLING_POLL_ATTEMPTS; attempt += 1) {
+        const nextUser = await refreshUser();
+
+        if (!isMounted || nextUser?.plan === "PRO") {
+          return;
+        }
+
+        await new Promise((resolve) => {
+          const timerId = window.setTimeout(resolve, BILLING_POLL_INTERVAL_MS);
+          billingTimers.push(timerId);
+        });
+      }
+    };
+
     loadMonitors();
     loadAnalytics();
 
     const billingStatus = new URLSearchParams(window.location.search).get("billing");
 
     if (billingStatus === "success") {
-      refreshUser();
+      pollBillingPlan().catch(() => {});
       addToast({
         type: "success",
         title: "Checkout complete",
@@ -94,6 +114,11 @@ export default function Dashboard() {
       });
       window.history.replaceState(null, "", window.location.pathname);
     }
+
+    return () => {
+      isMounted = false;
+      billingTimers.forEach((timerId) => window.clearTimeout(timerId));
+    };
   }, []);
 
   useEffect(() => {

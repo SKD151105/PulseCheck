@@ -1,3 +1,5 @@
+import dns from "dns/promises";
+import net from "net";
 import { monitorRepository } from "./monitor.repository.js";
 import { authRepository } from "../auth/auth.repository.js";
 import { checkRepository } from "../checks/check.repository.js";
@@ -12,18 +14,107 @@ import {
 import { getRedis } from "../../config/redis.js";
 import { logger } from "../../utils/logger.js";
 
-const normalizeUrl = (value) => {
+const normalizeIpAddress = (address) =>
+  address.toLowerCase().startsWith("::ffff:") ? address.slice(7) : address;
+
+const isPrivateIpv4 = (address) => {
+  const parts = address.split(".").map(Number);
+
+  if (parts.length !== 4 || parts.some((part) => Number.isNaN(part) || part < 0 || part > 255)) {
+    return true;
+  }
+
+  const [first, second, third] = parts;
+
+  return (
+    first === 0 ||
+    first === 10 ||
+    first === 127 ||
+    first >= 224 ||
+    (first === 100 && second >= 64 && second <= 127) ||
+    (first === 169 && second === 254) ||
+    (first === 172 && second >= 16 && second <= 31) ||
+    (first === 192 && second === 168) ||
+    (first === 192 && second === 0 && third === 0) ||
+    (first === 192 && second === 0 && third === 2) ||
+    (first === 198 && (second === 18 || second === 19)) ||
+    (first === 198 && second === 51 && third === 100) ||
+    (first === 203 && second === 0 && third === 113) ||
+    address === "255.255.255.255"
+  );
+};
+
+const isPrivateIpv6 = (address) => {
+  const normalized = address.toLowerCase();
+
+  return (
+    normalized === "::" ||
+    normalized === "::1" ||
+    normalized.startsWith("fc") ||
+    normalized.startsWith("fd") ||
+    normalized.startsWith("fe80:")
+  );
+};
+
+const isPrivateAddress = (address) => {
+  const normalized = normalizeIpAddress(address);
+  const version = net.isIP(normalized);
+
+  if (version === 4) {
+    return isPrivateIpv4(normalized);
+  }
+
+  if (version === 6) {
+    return isPrivateIpv6(normalized);
+  }
+
+  return true;
+};
+
+const assertPublicTarget = async (hostname) => {
+  const normalizedHostname = hostname.toLowerCase();
+
+  if (normalizedHostname === "localhost" || normalizedHostname.endsWith(".localhost")) {
+    throw new ApiError(400, "Private or localhost URLs cannot be monitored");
+  }
+
+  if (net.isIP(normalizedHostname)) {
+    if (isPrivateAddress(normalizedHostname)) {
+      throw new ApiError(400, "Private or localhost URLs cannot be monitored");
+    }
+
+    return;
+  }
+
+  let addresses;
+
   try {
-    const parsed = new URL(value);
+    addresses = await dns.lookup(normalizedHostname, { all: true });
+  } catch {
+    throw new ApiError(400, "Monitor URL hostname could not be resolved");
+  }
+
+  if (!addresses.length || addresses.some((entry) => isPrivateAddress(entry.address))) {
+    throw new ApiError(400, "Private or localhost URLs cannot be monitored");
+  }
+};
+
+const normalizeUrl = async (value) => {
+  let parsed;
+
+  try {
+    parsed = new URL(value);
 
     if (!["http:", "https:"].includes(parsed.protocol)) {
       throw new Error("invalid_protocol");
     }
-
-    return parsed.toString();
   } catch {
     throw new ApiError(400, "Please enter a valid URL");
   }
+
+  await assertPublicTarget(parsed.hostname);
+
+  return parsed.toString();
 };
 
 const serializeMonitor = (monitor) => ({
@@ -59,7 +150,7 @@ const clearMonitorCache = async (userId) => {
 export const monitorService = {
   async createMonitor(userId, payload) {
     const interval = Number(payload.interval);
-    const url = normalizeUrl(payload.url?.trim());
+    const url = await normalizeUrl(payload.url?.trim());
 
     if (!MONITOR_INTERVAL_OPTIONS.includes(interval)) {
       throw new ApiError(400, "Unsupported interval value");
@@ -118,7 +209,7 @@ export const monitorService = {
     }
 
     const nextInterval = payload.interval !== undefined ? Number(payload.interval) : existingMonitor.interval;
-    const nextUrl = payload.url !== undefined ? normalizeUrl(payload.url.trim()) : existingMonitor.url;
+    const nextUrl = payload.url !== undefined ? await normalizeUrl(payload.url.trim()) : existingMonitor.url;
 
     if (!MONITOR_INTERVAL_OPTIONS.includes(nextInterval)) {
       throw new ApiError(400, "Unsupported interval value");
