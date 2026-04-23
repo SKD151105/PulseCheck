@@ -15,7 +15,7 @@ import api from "../services/api";
 import "./Dashboard.css";
 
 const MONITORS_PER_PAGE = 8;
-const BILLING_POLL_ATTEMPTS = 10;
+const BILLING_POLL_ATTEMPTS = 5;
 const BILLING_POLL_INTERVAL_MS = 2000;
 
 const EmptyState = () => (
@@ -46,6 +46,10 @@ export default function Dashboard() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isBillingLoading, setIsBillingLoading] = useState(false);
+  const [isCancelingSubscription, setIsCancelingSubscription] = useState(false);
+  const [alertSettings, setAlertSettings] = useState({ enabled: true, email: "" });
+  const [alertHistory, setAlertHistory] = useState([]);
+  const [isSavingAlerts, setIsSavingAlerts] = useState(false);
   const analyticsTimerRef = useRef(null);
 
   const loadMonitors = async (search = "") => {
@@ -72,6 +76,32 @@ export default function Dashboard() {
     }
   };
 
+  const loadAlertSettings = async () => {
+    try {
+      const response = await api.get("/alerts/settings");
+      setAlertSettings(response.data.settings);
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Alert settings unavailable",
+        message: error.response?.data?.message || "Unable to load alert settings",
+      });
+    }
+  };
+
+  const loadAlertHistory = async () => {
+    try {
+      const response = await api.get("/alerts/history");
+      setAlertHistory(response.data.notifications);
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Alert history unavailable",
+        message: error.response?.data?.message || "Unable to load alert history",
+      });
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
     const billingTimers = [];
@@ -93,6 +123,8 @@ export default function Dashboard() {
 
     loadMonitors();
     loadAnalytics();
+    loadAlertSettings();
+    loadAlertHistory();
 
     const billingStatus = new URLSearchParams(window.location.search).get("billing");
 
@@ -232,6 +264,64 @@ export default function Dashboard() {
     }
   };
 
+  const handleCancelSubscription = async () => {
+    setIsCancelingSubscription(true);
+
+    try {
+      await api.post("/subscription/cancel");
+      await refreshUser();
+      addToast({
+        type: "info",
+        title: "Subscription cancellation scheduled",
+        message: "Your PRO access remains active until the current billing period ends.",
+      });
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Cancellation failed",
+        message: error.response?.data?.message || "Unable to cancel subscription",
+      });
+    } finally {
+      setIsCancelingSubscription(false);
+    }
+  };
+
+  const handleSaveAlertSettings = async (event) => {
+    event.preventDefault();
+    setIsSavingAlerts(true);
+
+    try {
+      const response = await api.patch("/alerts/settings", alertSettings);
+      setAlertSettings(response.data.settings);
+      await refreshUser();
+      addToast({
+        type: "success",
+        title: "Alert settings saved",
+        message: response.data.settings.enabled ? "Email alerts are enabled." : "Email alerts are disabled.",
+      });
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Save failed",
+        message: error.response?.data?.message || "Unable to update alert settings",
+      });
+    } finally {
+      setIsSavingAlerts(false);
+    }
+  };
+
+  const formatDate = (value) => {
+    if (!value) {
+      return "--";
+    }
+
+    return new Date(value).toLocaleDateString([], {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   const bannerMessage = networkError || (hasConnected && !isConnected ? "Connection lost. Reconnecting..." : "");
   const totalPages = Math.max(1, Math.ceil(monitors.length / MONITORS_PER_PAGE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
@@ -267,7 +357,20 @@ export default function Dashboard() {
                 >
                   {isBillingLoading ? "Opening..." : "Upgrade"}
                 </button>
-              ) : null}
+              ) : user?.subscriptionCancelAtPeriodEnd ? (
+                <span className="dashboard-hero__billing-note">
+                  Ends {formatDate(user?.subscriptionCurrentPeriodEnd)}
+                </span>
+              ) : (
+                <button
+                  className="dashboard-hero__cancel"
+                  type="button"
+                  onClick={handleCancelSubscription}
+                  disabled={isCancelingSubscription}
+                >
+                  {isCancelingSubscription ? "Canceling..." : "Cancel"}
+                </button>
+              )}
             </div>
           </header>
 
@@ -278,6 +381,68 @@ export default function Dashboard() {
           <AddMonitorForm plan={user?.plan} isSubmitting={isSubmitting} onSubmit={handleCreateMonitor} />
 
           <AnalyticsSection analytics={analytics} isLoading={isLoading} />
+
+          <section className="dashboard-section dashboard-settings" id="notifications">
+            <div className="dashboard-settings__panel">
+              <div>
+                <div className="dashboard-section__heading">Email alerts</div>
+                <p className="dashboard-settings__text">
+                  Choose where outage and recovery alerts should be sent.
+                </p>
+              </div>
+              <form className="dashboard-settings__form" onSubmit={handleSaveAlertSettings}>
+                <label className="dashboard-settings__toggle">
+                  <input
+                    type="checkbox"
+                    checked={alertSettings.enabled}
+                    onChange={(event) =>
+                      setAlertSettings((current) => ({ ...current, enabled: event.target.checked }))
+                    }
+                  />
+                  <span>Email alerts enabled</span>
+                </label>
+                <input
+                  className="dashboard-settings__input"
+                  type="email"
+                  value={alertSettings.email}
+                  onChange={(event) =>
+                    setAlertSettings((current) => ({ ...current, email: event.target.value }))
+                  }
+                  placeholder={user?.email || "alerts@example.com"}
+                />
+                <button className="dashboard-settings__button" type="submit" disabled={isSavingAlerts}>
+                  {isSavingAlerts ? "Saving..." : "Save alerts"}
+                </button>
+              </form>
+            </div>
+
+            <div className="dashboard-settings__panel">
+              <div className="dashboard-section__heading">Notification history</div>
+              {alertHistory.length ? (
+                <div className="dashboard-settings__history">
+                  {alertHistory.map((notification) => (
+                    <div className="dashboard-settings__history-row" key={notification.id}>
+                      <div>
+                        <div className="dashboard-settings__history-title" title={notification.url}>
+                          {notification.url}
+                        </div>
+                        <div className="dashboard-settings__history-meta">
+                          {notification.event} - {notification.recipientEmail || "No recipient"}
+                        </div>
+                      </div>
+                      <span
+                        className={`dashboard-settings__history-status dashboard-settings__history-status--${notification.deliveryStatus}`}
+                      >
+                        {notification.deliveryStatus}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="dashboard-settings__empty">No email alert activity yet.</div>
+              )}
+            </div>
+          </section>
 
           <section className="dashboard-section" id="monitors">
             <div className="dashboard-section__topbar">

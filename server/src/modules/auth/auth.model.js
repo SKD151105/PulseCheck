@@ -38,6 +38,26 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "free",
     },
+    subscriptionCancelAtPeriodEnd: {
+      type: Boolean,
+      default: false,
+    },
+    subscriptionCurrentPeriodEnd: {
+      type: Date,
+      default: null,
+    },
+    alertPreferences: {
+      enabled: {
+        type: Boolean,
+        default: true,
+      },
+      email: {
+        type: String,
+        default: "",
+        lowercase: true,
+        trim: true,
+      },
+    },
   },
   { timestamps: true }
 );

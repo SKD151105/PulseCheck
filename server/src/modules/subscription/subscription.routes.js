@@ -9,5 +9,6 @@ router.use(authMiddleware);
 router.get("/", asyncHandler(subscriptionController.current));
 router.patch("/", asyncHandler(subscriptionController.update));
 router.post("/checkout", asyncHandler(subscriptionController.checkout));
+router.post("/cancel", asyncHandler(subscriptionController.cancel));
 
 export default router;

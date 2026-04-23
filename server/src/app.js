@@ -6,6 +6,7 @@ import monitorRoutes from "./modules/monitors/monitor.routes.js";
 import subscriptionRoutes from "./modules/subscription/subscription.routes.js";
 import { subscriptionController } from "./modules/subscription/subscription.controller.js";
 import analyticsRoutes from "./modules/analytics/analytics.routes.js";
+import alertRoutes from "./modules/alerts/alert.routes.js";
 import { errorMiddleware, notFoundMiddleware } from "./middlewares/error.middleware.js";
 import { requestLoggerMiddleware } from "./middlewares/request.middleware.js";
 import { asyncHandler } from "./utils/asyncHandler.js";
@@ -36,6 +37,7 @@ export const createApp = () => {
   app.use("/api/monitors", monitorRoutes);
   app.use("/api/subscription", subscriptionRoutes);
   app.use("/api/analytics", analyticsRoutes);
+  app.use("/api/alerts", alertRoutes);
 
   app.use(notFoundMiddleware);
   app.use(errorMiddleware);

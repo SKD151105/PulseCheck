@@ -13,4 +13,11 @@ export const authRepository = {
   incrementRefreshTokenVersion(id) {
     return User.findByIdAndUpdate(id, { $inc: { refreshTokenVersion: 1 } }, { returnDocument: "after" });
   },
+  updateAlertPreferences(id, alertPreferences) {
+    return User.findByIdAndUpdate(
+      id,
+      { alertPreferences },
+      { returnDocument: "after", runValidators: true }
+    );
+  },
 };

@@ -41,6 +41,12 @@ const serializeAuthUser = (user) => ({
   email: user.email,
   plan: user.plan,
   subscriptionStatus: user.subscriptionStatus,
+  subscriptionCancelAtPeriodEnd: user.subscriptionCancelAtPeriodEnd,
+  subscriptionCurrentPeriodEnd: user.subscriptionCurrentPeriodEnd,
+  alertPreferences: {
+    enabled: user.alertPreferences?.enabled ?? true,
+    email: user.alertPreferences?.email || "",
+  },
 });
 
 export const authService = {
