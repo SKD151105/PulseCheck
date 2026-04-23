@@ -92,6 +92,25 @@ Stripe subscription upgrades use `POST /api/subscription/checkout` and Stripe we
 `POST /api/subscription/webhook`. Manual plan PATCHes are blocked unless
 `ALLOW_MANUAL_PLAN_UPDATES=true` is set for local/admin-only testing.
 
+### Stripe test checkout
+
+The app is configured for Stripe Checkout subscriptions. In test mode, clicking **Upgrade** opens a Stripe-hosted checkout page and no real money is charged. Use this test card for demos:
+
+```text
+Card: 4242 4242 4242 4242
+Expiry: Any future date, such as 12/34
+CVC: Any 3 digits
+ZIP/postal code: Any value
+```
+
+For deployed demos, the backend must have `STRIPE_SECRET_KEY`, `STRIPE_PRO_PRICE_ID`, and `STRIPE_WEBHOOK_SECRET` set in Render, and the Stripe webhook endpoint should point to:
+
+```text
+https://your-render-backend.onrender.com/api/subscription/webhook
+```
+
+The webhook should listen for `checkout.session.completed`, `customer.subscription.updated`, and `customer.subscription.deleted`.
+
 ### 3. Run the backend
 
 ```bash
