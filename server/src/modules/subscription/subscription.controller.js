@@ -16,11 +16,6 @@ export const subscriptionController = {
     res.json(session);
   },
 
-  async cancel(req, res) {
-    const subscription = await subscriptionService.cancelSubscription(req.user.id);
-    res.json({ subscription });
-  },
-
   async webhook(req, res) {
     const result = await subscriptionService.handleStripeWebhook(req.body, req.headers["stripe-signature"]);
     res.json(result);

@@ -84,29 +84,6 @@
   opacity: 0.7;
 }
 
-.dashboard-hero__cancel {
-  height: 34px;
-  padding: 0 12px;
-  border: 1px solid rgba(239, 68, 68, 0.24);
-  border-radius: 8px;
-  background: var(--status-down-bg);
-  color: var(--status-down);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.dashboard-hero__cancel:disabled {
-  cursor: progress;
-  opacity: 0.7;
-}
-
-.dashboard-hero__billing-note {
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
 .dashboard-banner {
   margin-top: 12px;
   padding: 10px 14px;

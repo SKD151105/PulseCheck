@@ -46,7 +46,6 @@ export default function Dashboard() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isBillingLoading, setIsBillingLoading] = useState(false);
-  const [isCancelingSubscription, setIsCancelingSubscription] = useState(false);
   const [alertSettings, setAlertSettings] = useState({ enabled: true, email: "" });
   const [alertHistory, setAlertHistory] = useState([]);
   const [isSavingAlerts, setIsSavingAlerts] = useState(false);
@@ -264,28 +263,6 @@ export default function Dashboard() {
     }
   };
 
-  const handleCancelSubscription = async () => {
-    setIsCancelingSubscription(true);
-
-    try {
-      await api.post("/subscription/cancel");
-      await refreshUser();
-      addToast({
-        type: "info",
-        title: "Subscription cancellation scheduled",
-        message: "Your PRO access remains active until the current billing period ends.",
-      });
-    } catch (error) {
-      addToast({
-        type: "error",
-        title: "Cancellation failed",
-        message: error.response?.data?.message || "Unable to cancel subscription",
-      });
-    } finally {
-      setIsCancelingSubscription(false);
-    }
-  };
-
   const handleSaveAlertSettings = async (event) => {
     event.preventDefault();
     setIsSavingAlerts(true);
@@ -308,18 +285,6 @@ export default function Dashboard() {
     } finally {
       setIsSavingAlerts(false);
     }
-  };
-
-  const formatDate = (value) => {
-    if (!value) {
-      return "--";
-    }
-
-    return new Date(value).toLocaleDateString([], {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
   };
 
   const bannerMessage = networkError || (hasConnected && !isConnected ? "Connection lost. Reconnecting..." : "");
@@ -357,20 +322,7 @@ export default function Dashboard() {
                 >
                   {isBillingLoading ? "Opening..." : "Upgrade"}
                 </button>
-              ) : user?.subscriptionCancelAtPeriodEnd ? (
-                <span className="dashboard-hero__billing-note">
-                  Ends {formatDate(user?.subscriptionCurrentPeriodEnd)}
-                </span>
-              ) : (
-                <button
-                  className="dashboard-hero__cancel"
-                  type="button"
-                  onClick={handleCancelSubscription}
-                  disabled={isCancelingSubscription}
-                >
-                  {isCancelingSubscription ? "Canceling..." : "Cancel"}
-                </button>
-              )}
+              ) : null}
             </div>
           </header>
 

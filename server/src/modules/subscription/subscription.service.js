@@ -99,36 +99,6 @@ export const subscriptionService = {
     return { url: session.url };
   },
 
-  async cancelSubscription(userId) {
-    const user = await subscriptionRepository.findById(userId);
-
-    if (!user) {
-      throw new ApiError(404, "User not found");
-    }
-
-    if (!user.stripeSubscriptionId || !["active", "trialing"].includes(user.subscriptionStatus)) {
-      throw new ApiError(400, "No active subscription to cancel");
-    }
-
-    const stripe = await getStripe();
-    const subscription = await stripe.subscriptions.update(user.stripeSubscriptionId, {
-      cancel_at_period_end: true,
-    });
-
-    const updatedUser = await subscriptionRepository.updateStripeSubscription(userId, {
-      plan: planForStripeStatus(subscription.status),
-      stripeCustomerId: subscription.customer,
-      stripeSubscriptionId: subscription.id,
-      subscriptionStatus: subscription.status,
-      subscriptionCancelAtPeriodEnd: Boolean(subscription.cancel_at_period_end),
-      subscriptionCurrentPeriodEnd: subscription.current_period_end
-        ? new Date(subscription.current_period_end * 1000)
-        : null,
-    });
-
-    return serializeSubscription(updatedUser);
-  },
-
   async handleStripeWebhook(rawBody, signature) {
     if (!process.env.STRIPE_WEBHOOK_SECRET) {
       throw new ApiError(503, "Stripe webhook is not configured");
