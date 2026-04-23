@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import "./Sidebar.css";
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const lockRef = useRef({ section: null, timerId: null });
 
   useEffect(() => {
     if (!isLogoutOpen) {
@@ -23,14 +24,54 @@ export default function Sidebar() {
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isLogoutOpen]);
 
-  const handleScrollToSection = (event, sectionId) => {
-    event.preventDefault();
+  useEffect(() => {
+    const syncActiveSection = () => {
+      if (lockRef.current.section) {
+        setActiveSection(lockRef.current.section);
+        return;
+      }
+
+      const analyticsSection = document.getElementById("analytics");
+      const monitorsSection = document.getElementById("monitors");
+      const scrollPosition = window.scrollY + 140;
+
+      if (monitorsSection && scrollPosition >= monitorsSection.offsetTop) {
+        setActiveSection("monitors");
+        return;
+      }
+
+      if (analyticsSection && scrollPosition >= analyticsSection.offsetTop) {
+        setActiveSection("analytics");
+        return;
+      }
+
+      setActiveSection("dashboard");
+    };
+
+    syncActiveSection();
+    window.addEventListener("scroll", syncActiveSection, { passive: true });
+
+    return () => window.removeEventListener("scroll", syncActiveSection);
+  }, []);
+
+  const handleScrollToSection = (sectionId) => {
+    setActiveSection(sectionId);
+    window.clearTimeout(lockRef.current.timerId);
+    lockRef.current.section = sectionId;
+    lockRef.current.timerId = window.setTimeout(() => {
+      lockRef.current.section = null;
+      lockRef.current.timerId = null;
+    }, 700);
+
+    if (sectionId === "dashboard") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
 
     const section = document.getElementById(sectionId);
 
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.history.replaceState(null, "", `#${sectionId}`);
     }
   };
 
@@ -38,6 +79,13 @@ export default function Sidebar() {
     setIsLogoutOpen(false);
     logout();
   };
+
+  useEffect(
+    () => () => {
+      window.clearTimeout(lockRef.current.timerId);
+    },
+    []
+  );
 
   return (
     <>
@@ -49,23 +97,27 @@ export default function Sidebar() {
           </div>
 
           <nav className="sidebar__nav">
-            <NavLink to="/" end className="sidebar__nav-link">
+            <button
+              type="button"
+              className={`sidebar__nav-link ${activeSection === "dashboard" ? "active" : ""}`}
+              onClick={() => handleScrollToSection("dashboard")}
+            >
               Dashboard
-            </NavLink>
-            <a
-              href="#analytics"
-              className="sidebar__nav-link"
-              onClick={(event) => handleScrollToSection(event, "analytics")}
+            </button>
+            <button
+              type="button"
+              className={`sidebar__nav-link ${activeSection === "analytics" ? "active" : ""}`}
+              onClick={() => handleScrollToSection("analytics")}
             >
               Analytics
-            </a>
-            <a
-              href="#monitors"
-              className="sidebar__nav-link"
-              onClick={(event) => handleScrollToSection(event, "monitors")}
+            </button>
+            <button
+              type="button"
+              className={`sidebar__nav-link ${activeSection === "monitors" ? "active" : ""}`}
+              onClick={() => handleScrollToSection("monitors")}
             >
               Monitors
-            </a>
+            </button>
           </nav>
         </div>
 

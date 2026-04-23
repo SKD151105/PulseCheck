@@ -146,4 +146,4 @@ cd C:\redis
 - The worker runs every minute and only checks monitors whose interval window has elapsed.
 - FREE plan: max 5 monitors, minimum 5 minute interval.
 - PRO plan: max 50 monitors, minimum 1 minute interval.
-- Sidebar links like `#analytics` and `#monitors` are intentional in-page anchors so users can jump to dashboard sections without creating separate routes.
+- Sidebar navigation scrolls between dashboard sections and highlights the active section without changing the page URL.

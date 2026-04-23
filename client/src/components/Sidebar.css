@@ -39,11 +39,15 @@
 
 .sidebar__nav-link {
   display: block;
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid transparent;
   border-radius: 8px;
+  background: transparent;
   color: var(--text-secondary);
   text-decoration: none;
+  text-align: left;
+  cursor: pointer;
   transition: 0.15s ease;
 }
 
