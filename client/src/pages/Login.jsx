@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 import "./Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "", rememberMe: true });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    api.get("/health", { timeout: 5000 }).catch(() => {});
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -81,6 +86,15 @@ export default function Login() {
             </button>
           </div>
         </div>
+
+        <label className="auth-checkbox">
+          <input
+            type="checkbox"
+            checked={form.rememberMe}
+            onChange={(event) => setForm((current) => ({ ...current, rememberMe: event.target.checked }))}
+          />
+          <span>Remember me</span>
+        </label>
 
         {error ? <div className="auth-error">{error}</div> : null}
 

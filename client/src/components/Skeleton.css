@@ -4,13 +4,13 @@
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.84);
+  background: var(--bg-card);
 }
 
 .skeleton-shimmer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.84) 0%, var(--bg-card-hover) 50%, rgba(255, 255, 255, 0.84) 100%);
+  background: linear-gradient(90deg, var(--bg-card) 0%, var(--bg-card-hover) 50%, var(--bg-card) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite linear;
 }

@@ -1,10 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import api from "../services/api";
+import api, { TOKEN_KEY, setStoredToken } from "../services/api";
 import { connectSocket, disconnectSocket } from "../services/socket";
 
 const AuthContext = createContext(null);
-
-const TOKEN_KEY = "pulsecheck_token";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -12,14 +10,14 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
 
   const persistSession = (nextToken, nextUser) => {
-    localStorage.setItem(TOKEN_KEY, nextToken);
+    setStoredToken(nextToken);
     setToken(nextToken);
     setUser(nextUser);
     connectSocket(nextToken);
   };
 
   const clearSession = () => {
-    localStorage.removeItem(TOKEN_KEY);
+    setStoredToken(null);
     setToken(null);
     setUser(null);
     disconnectSocket();
@@ -44,18 +42,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    api.post("/auth/logout").catch(() => {});
     clearSession();
   };
 
   useEffect(() => {
     const bootstrap = async () => {
-      if (!token) {
-        setIsBootstrapping(false);
-        return;
-      }
-
       try {
-        connectSocket(token);
+        const activeToken = token || (await api.post("/auth/refresh")).data.token;
+        setStoredToken(activeToken);
+        setToken(activeToken);
+        connectSocket(activeToken);
         await refreshUser();
       } catch {
         clearSession();

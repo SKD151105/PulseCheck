@@ -6,11 +6,15 @@ import MonitorCard from "../components/MonitorCard";
 import MonitorDetailsModal from "../components/MonitorDetailsModal";
 import Skeleton from "../components/Skeleton";
 import AnalyticsSection from "../components/AnalyticsSection";
+import ConfirmDialog from "../components/ConfirmDialog";
+import ThemeToggle from "../components/ThemeToggle";
 import { useToast } from "../context/ToastContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 import "./Dashboard.css";
+
+const MONITORS_PER_PAGE = 8;
 
 const EmptyState = () => (
   <div className="empty-state">
@@ -26,7 +30,7 @@ const EmptyState = () => (
 );
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { addToast } = useToast();
   const { socket, isConnected, hasConnected } = useSocketContext();
   const [monitors, setMonitors] = useState([]);
@@ -37,6 +41,9 @@ export default function Dashboard() {
   const [analytics, setAnalytics] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMonitorId, setSelectedMonitorId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isBillingLoading, setIsBillingLoading] = useState(false);
   const analyticsTimerRef = useRef(null);
 
   const loadMonitors = async (search = "") => {
@@ -66,11 +73,33 @@ export default function Dashboard() {
   useEffect(() => {
     loadMonitors();
     loadAnalytics();
+
+    const billingStatus = new URLSearchParams(window.location.search).get("billing");
+
+    if (billingStatus === "success") {
+      refreshUser();
+      addToast({
+        type: "success",
+        title: "Checkout complete",
+        message: "Your subscription will update as soon as Stripe confirms it.",
+      });
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+
+    if (billingStatus === "cancelled") {
+      addToast({
+        type: "info",
+        title: "Checkout cancelled",
+        message: "No subscription changes were made.",
+      });
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   }, []);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       loadMonitors(searchQuery);
+      setCurrentPage(1);
     }, 250);
 
     return () => window.clearTimeout(timeoutId);
@@ -162,7 +191,29 @@ export default function Dashboard() {
     }
   };
 
+  const handleUpgrade = async () => {
+    setIsBillingLoading(true);
+
+    try {
+      const response = await api.post("/subscription/checkout");
+      window.location.href = response.data.url;
+    } catch (error) {
+      addToast({
+        type: "error",
+        title: "Checkout unavailable",
+        message: error.response?.data?.message || "Unable to start Stripe checkout",
+      });
+      setIsBillingLoading(false);
+    }
+  };
+
   const bannerMessage = networkError || (hasConnected && !isConnected ? "Connection lost. Reconnecting..." : "");
+  const totalPages = Math.max(1, Math.ceil(monitors.length / MONITORS_PER_PAGE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const visibleMonitors = monitors.slice(
+    (safeCurrentPage - 1) * MONITORS_PER_PAGE,
+    safeCurrentPage * MONITORS_PER_PAGE
+  );
 
   return (
     <div className="dashboard-layout">
@@ -178,9 +229,20 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="dashboard-hero__meta">
+              <ThemeToggle />
               <span className={`dashboard-hero__plan dashboard-hero__plan--${user?.plan?.toLowerCase()}`}>
                 {user?.plan} plan
               </span>
+              {user?.plan !== "PRO" ? (
+                <button
+                  className="dashboard-hero__upgrade"
+                  type="button"
+                  onClick={handleUpgrade}
+                  disabled={isBillingLoading}
+                >
+                  {isBillingLoading ? "Opening..." : "Upgrade"}
+                </button>
+              ) : null}
             </div>
           </header>
 
@@ -213,17 +275,42 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : monitors.length ? (
-              <div className="dashboard-list">
-                {monitors.map((monitor) => (
-                  <MonitorCard
-                    key={monitor.id}
-                    monitor={monitor}
-                    flashKey={flashMap[monitor.id]}
-                    onDelete={handleDeleteMonitor}
-                    onOpen={setSelectedMonitorId}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="dashboard-list">
+                  {visibleMonitors.map((monitor) => (
+                    <MonitorCard
+                      key={monitor.id}
+                      monitor={monitor}
+                      flashKey={flashMap[monitor.id]}
+                      onDelete={() => setDeleteTarget(monitor)}
+                      onOpen={setSelectedMonitorId}
+                    />
+                  ))}
+                </div>
+                {totalPages > 1 ? (
+                  <div className="dashboard-pagination">
+                    <button
+                      className="dashboard-pagination__button"
+                      type="button"
+                      disabled={safeCurrentPage === 1}
+                      onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                    >
+                      Previous
+                    </button>
+                    <span className="dashboard-pagination__label">
+                      Page {safeCurrentPage} of {totalPages}
+                    </span>
+                    <button
+                      className="dashboard-pagination__button"
+                      type="button"
+                      disabled={safeCurrentPage === totalPages}
+                      onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                    >
+                      Next
+                    </button>
+                  </div>
+                ) : null}
+              </>
             ) : (
               <EmptyState />
             )}
@@ -238,6 +325,20 @@ export default function Dashboard() {
               onUpdated={() => {
                 loadMonitors(searchQuery);
                 loadAnalytics();
+              }}
+            />
+          ) : null}
+
+          {deleteTarget ? (
+            <ConfirmDialog
+              title="Delete monitor?"
+              message={`This will remove ${deleteTarget.url} and its dashboard entry.`}
+              confirmLabel="Delete"
+              onCancel={() => setDeleteTarget(null)}
+              onConfirm={() => {
+                const targetId = deleteTarget.id;
+                setDeleteTarget(null);
+                handleDeleteMonitor(targetId);
               }}
             />
           ) : null}

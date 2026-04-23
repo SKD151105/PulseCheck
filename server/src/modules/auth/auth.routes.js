@@ -14,6 +14,8 @@ const authRateLimit = createRateLimitMiddleware(
 
 router.post("/register", authRateLimit, asyncHandler(authController.register));
 router.post("/login", authRateLimit, asyncHandler(authController.login));
+router.post("/refresh", asyncHandler(authController.refresh));
+router.post("/logout", authMiddleware, asyncHandler(authController.logout));
 router.get("/me", authMiddleware, asyncHandler(authController.me));
 
 export default router;

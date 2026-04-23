@@ -74,7 +74,11 @@ PORT=5000
 MONGO_URI=mongodb://127.0.0.1:27017/pulsecheck
 REDIS_URL=redis://127.0.0.1:6379
 JWT_SECRET=replace_with_a_secure_secret
+JWT_REFRESH_SECRET=replace_with_a_second_secure_secret
 CLIENT_URL=http://localhost:5173
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PRO_PRICE_ID=price_...
+STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
 Create `client/.env`:
@@ -83,6 +87,10 @@ Create `client/.env`:
 VITE_API_BASE_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
 ```
+
+Stripe subscription upgrades use `POST /api/subscription/checkout` and Stripe webhooks at
+`POST /api/subscription/webhook`. Manual plan PATCHes are blocked unless
+`ALLOW_MANUAL_PLAN_UPDATES=true` is set for local/admin-only testing.
 
 ### 3. Run the backend
 
@@ -119,3 +127,4 @@ cd C:\redis
 - The worker runs every minute and only checks monitors whose interval window has elapsed.
 - FREE plan: max 5 monitors, minimum 5 minute interval.
 - PRO plan: max 50 monitors, minimum 1 minute interval.
+- Sidebar links like `#analytics` and `#monitors` are intentional in-page anchors so users can jump to dashboard sections without creating separate routes.

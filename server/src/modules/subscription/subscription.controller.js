@@ -10,4 +10,14 @@ export const subscriptionController = {
     const subscription = await subscriptionService.updatePlan(req.user.id, req.body.plan);
     res.json({ subscription });
   },
+
+  async checkout(req, res) {
+    const session = await subscriptionService.createCheckoutSession(req.user.id);
+    res.json(session);
+  },
+
+  async webhook(req, res) {
+    const result = await subscriptionService.handleStripeWebhook(req.body, req.headers["stripe-signature"]);
+    res.json(result);
+  },
 };

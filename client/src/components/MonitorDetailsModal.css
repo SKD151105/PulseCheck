@@ -5,7 +5,9 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(15, 23, 42, 0.28);
+  background: rgba(6, 10, 16, 0.56);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
 }
 
 .monitor-modal__card {
@@ -13,9 +15,10 @@
   max-height: calc(100vh - 48px);
   overflow: auto;
   padding: 24px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: 18px;
-  background: var(--bg-card);
+  background: var(--monitor-bg);
+  box-shadow: 0 0 0 1px var(--monitor-modal-ring), var(--shadow-modal);
 }
 
 .monitor-modal__header,
@@ -101,7 +104,7 @@
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--monitor-surface);
 }
 
 .monitor-modal__metric-label,
@@ -156,7 +159,7 @@
   padding: 14px 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--monitor-surface);
 }
 
 .monitor-modal__timeline-status {

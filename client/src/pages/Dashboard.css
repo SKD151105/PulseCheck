@@ -49,13 +49,14 @@
 .dashboard-hero__meta {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .dashboard-hero__plan {
   padding: 7px 12px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--bg-surface);
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -64,6 +65,23 @@
 .dashboard-hero__plan--pro {
   border-color: rgba(64, 99, 235, 0.28);
   color: var(--accent);
+}
+
+.dashboard-hero__upgrade {
+  height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dashboard-hero__upgrade:disabled {
+  cursor: progress;
+  opacity: 0.7;
 }
 
 .dashboard-banner {
@@ -132,8 +150,37 @@
   min-height: 320px;
   border: 1px dashed var(--border);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--bg-card);
   color: var(--text-secondary);
+}
+
+.dashboard-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.dashboard-pagination__button {
+  min-width: 88px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.dashboard-pagination__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.dashboard-pagination__label {
+  color: var(--text-secondary);
+  font-size: 13px;
 }
 
 .empty-state svg {

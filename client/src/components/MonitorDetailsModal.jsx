@@ -142,8 +142,8 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
             <h2 className="monitor-modal__title">{details?.monitor.url || "Loading monitor"}</h2>
           </div>
           <div className="monitor-modal__actions">
-            <button className="monitor-modal__button monitor-modal__button--secondary" onClick={() => setIsEditing((current) => !current)}>
-              {isEditing ? "Cancel edit" : "Edit monitor"}
+            <button className="monitor-modal__button" onClick={() => setIsEditing((current) => !current)}>
+              {isEditing ? "Cancel" : "Edit"}
             </button>
             <button className="monitor-modal__button" onClick={onClose}>
               Close

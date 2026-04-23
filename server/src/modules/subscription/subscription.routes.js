@@ -8,5 +8,6 @@ const router = Router();
 router.use(authMiddleware);
 router.get("/", asyncHandler(subscriptionController.current));
 router.patch("/", asyncHandler(subscriptionController.update));
+router.post("/checkout", asyncHandler(subscriptionController.checkout));
 
 export default router;

@@ -4,7 +4,7 @@ import { authRepository } from "./auth.repository.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { logger } from "../../utils/logger.js";
 
-const buildToken = (user) =>
+const buildAccessToken = (user) =>
   jwt.sign(
     {
       email: user.email,
@@ -12,15 +12,35 @@ const buildToken = (user) =>
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: "7d",
+      expiresIn: "15m",
       subject: user.id.toString(),
     }
   );
+
+const buildRefreshToken = (user, rememberMe = true) =>
+  jwt.sign(
+    {
+      tokenVersion: user.refreshTokenVersion ?? 0,
+    },
+    process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+    {
+      expiresIn: rememberMe ? "30d" : "1d",
+      subject: user.id.toString(),
+    }
+  );
+
+const buildAuthResponse = (user, rememberMe = true) => ({
+  user: serializeAuthUser(user),
+  token: buildAccessToken(user),
+  refreshToken: buildRefreshToken(user, rememberMe),
+  rememberMe,
+});
 
 const serializeAuthUser = (user) => ({
   id: user.id,
   email: user.email,
   plan: user.plan,
+  subscriptionStatus: user.subscriptionStatus,
 });
 
 export const authService = {
@@ -43,10 +63,7 @@ export const authService = {
     const user = await authRepository.create({ email, password: hashedPassword });
     logger.info("User registered", { userId: user.id, email: user.email });
 
-    return {
-      user: serializeAuthUser(user),
-      token: buildToken(user),
-    };
+    return buildAuthResponse(user, true);
   },
 
   async login(payload) {
@@ -73,10 +90,7 @@ export const authService = {
 
     logger.info("User logged in", { userId: user.id, email: user.email });
 
-    return {
-      user: serializeAuthUser(user),
-      token: buildToken(user),
-    };
+    return buildAuthResponse(user, payload.rememberMe !== false);
   },
 
   async getCurrentUser(userId) {
@@ -88,5 +102,36 @@ export const authService = {
     }
 
     return serializeAuthUser(user);
+  },
+
+  async refreshSession(refreshToken) {
+    if (!refreshToken) {
+      throw new ApiError(401, "Refresh token required");
+    }
+
+    let payload;
+
+    try {
+      payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET);
+    } catch {
+      throw new ApiError(401, "Invalid or expired refresh token");
+    }
+
+    const user = await authRepository.findById(payload.sub);
+
+    if (!user || payload.tokenVersion !== (user.refreshTokenVersion ?? 0)) {
+      throw new ApiError(401, "Invalid refresh token");
+    }
+
+    return {
+      user: serializeAuthUser(user),
+      token: buildAccessToken(user),
+    };
+  },
+
+  async logout(userId) {
+    if (userId) {
+      await authRepository.incrementRefreshTokenVersion(userId);
+    }
   },
 };

@@ -155,7 +155,7 @@ export const monitorService = {
     const [summary24h, summary7d, recentChecks, incidents, responseTrend, uptimeTrend] = await Promise.all([
       checkRepository.getMonitorSummary(monitor._id, since24h),
       checkRepository.getMonitorSummary(monitor._id, since7d),
-      checkRepository.findRecentByMonitorId(monitor._id, 30),
+      checkRepository.findRecentByMonitorId(monitor._id, 10),
       incidentRepository.findRecentByMonitorId(monitor._id, 12),
       checkRepository.getResponseTrend(monitor._id, since24h, 20),
       checkRepository.getDailyUptimeTrend(monitor._id, since7d),

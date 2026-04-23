@@ -10,4 +10,7 @@ export const authRepository = {
   findById(id) {
     return User.findById(id);
   },
+  incrementRefreshTokenVersion(id) {
+    return User.findByIdAndUpdate(id, { $inc: { refreshTokenVersion: 1 } }, { returnDocument: "after" });
+  },
 };
