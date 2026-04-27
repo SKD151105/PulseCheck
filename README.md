@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://capsule-render.vercel.app/api?type=rect&height=210&color=0:0f172a,40:1f2937,80:0ea5e9,100:10b981&text=PulseCheck&fontSize=56&fontColor=ffffff&fontAlignY=40&desc=Realtime%20Uptime%20Monitoring%20SaaS%20with%20WebSocket%20Telemetry&descAlignY=66" alt="PulseCheck banner" />
+	<img src="./assets/pulsecheck-banner.svg" alt="PulseCheck banner" />
 </p>
 
 <p align="center">
