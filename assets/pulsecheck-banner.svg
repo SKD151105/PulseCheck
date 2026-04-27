@@ -49,8 +49,8 @@
   <circle cx="1380" cy="340" r="330" fill="url(#glowGreen)"/>
 
   <g opacity="0.88">
-    <path d="M140 364H360L420 286L472 424L540 256L602 364H690L736 320L790 396L864 228L942 364H1030L1080 308L1146 388L1218 236L1290 364H1460" stroke="url(#lineSoft)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" filter="url(#softBlur)"/>
-    <path d="M140 364H360L420 286L472 424L540 256L602 364H690L736 320L790 396L864 228L942 364H1030L1080 308L1146 388L1218 236L1290 364H1460" stroke="url(#line)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M140 324H690L736 280L790 356L864 188L942 324H1030L1080 268L1146 348L1218 196L1290 324H1460" stroke="url(#lineSoft)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" filter="url(#softBlur)"/>
+    <path d="M140 324H690L736 280L790 356L864 188L942 324H1030L1080 268L1146 348L1218 196L1290 324H1460" stroke="url(#line)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 
   <g fill="#E5E7EB" opacity="0.78" font-family="Segoe UI, Inter, system-ui, -apple-system, sans-serif" font-size="17" letter-spacing="1.4">
