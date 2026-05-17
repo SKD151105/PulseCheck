@@ -7,6 +7,7 @@ const router = Router();
 
 router.use(authMiddleware);
 router.get("/", asyncHandler(subscriptionController.current));
+router.get("/confirm", asyncHandler(subscriptionController.confirmCheckout));
 router.patch("/", asyncHandler(subscriptionController.update));
 router.post("/checkout", asyncHandler(subscriptionController.checkout));
 

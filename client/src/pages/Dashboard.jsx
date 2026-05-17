@@ -51,6 +51,22 @@ export default function Dashboard() {
   const [isSavingAlerts, setIsSavingAlerts] = useState(false);
   const analyticsTimerRef = useRef(null);
 
+  const syncBillingPlan = async (sessionId) => {
+    if (!sessionId) {
+      return null;
+    }
+
+    try {
+      const response = await api.get("/subscription/confirm", {
+        params: { sessionId },
+      });
+
+      return response.data.subscription;
+    } catch {
+      return null;
+    }
+  };
+
   const loadMonitors = async (search = "") => {
     try {
       const response = await api.get("/monitors", {
@@ -126,15 +142,33 @@ export default function Dashboard() {
     loadAlertHistory();
 
     const billingStatus = new URLSearchParams(window.location.search).get("billing");
+    const sessionId = new URLSearchParams(window.location.search).get("session_id");
 
     if (billingStatus === "success") {
-      pollBillingPlan().catch(() => {});
-      addToast({
-        type: "success",
-        title: "Checkout complete",
-        message: "Your subscription will update as soon as Stripe confirms it.",
-      });
-      window.history.replaceState(null, "", window.location.pathname);
+      Promise.resolve(syncBillingPlan(sessionId))
+        .then((subscription) => {
+          if (subscription?.plan === "PRO") {
+            return refreshUser().then(() => {
+              addToast({
+                type: "success",
+                title: "Upgrade complete",
+                message: "Your PRO plan is now active.",
+              });
+            });
+          }
+
+          return pollBillingPlan().then(() => {
+            addToast({
+              type: "success",
+              title: "Checkout complete",
+              message: "Your subscription will update as soon as Stripe confirms it.",
+            });
+          });
+        })
+        .catch(() => {})
+        .finally(() => {
+          window.history.replaceState(null, "", window.location.pathname);
+        });
     }
 
     if (billingStatus === "cancelled") {

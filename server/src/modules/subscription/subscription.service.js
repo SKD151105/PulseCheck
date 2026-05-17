@@ -23,6 +23,17 @@ const serializeSubscription = (user) => ({
 const planForStripeStatus = (status) =>
   ["active", "trialing"].includes(status) ? PLANS.PRO : PLANS.FREE;
 
+const toSubscriptionPayload = ({ subscription, customerId }) => ({
+  plan: planForStripeStatus(subscription.status),
+  stripeCustomerId: customerId || subscription.customer,
+  stripeSubscriptionId: subscription.id,
+  subscriptionStatus: subscription.status,
+  subscriptionCancelAtPeriodEnd: Boolean(subscription.cancel_at_period_end),
+  subscriptionCurrentPeriodEnd: subscription.current_period_end
+    ? new Date(subscription.current_period_end * 1000)
+    : null,
+});
+
 export const subscriptionService = {
   async getCurrentPlan(userId) {
     const user = await subscriptionRepository.findById(userId);
@@ -88,7 +99,7 @@ export const subscriptionService = {
       mode: "subscription",
       customer: stripeCustomerId,
       line_items: [{ price: process.env.STRIPE_PRO_PRICE_ID, quantity: 1 }],
-      success_url: `${clientUrl}/?billing=success`,
+      success_url: `${clientUrl}/?billing=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${clientUrl}/?billing=cancelled`,
       metadata: { userId: user.id.toString() },
       subscription_data: {
@@ -97,6 +108,50 @@ export const subscriptionService = {
     });
 
     return { url: session.url };
+  },
+
+  async confirmCheckoutSession(userId, sessionId) {
+    if (!sessionId) {
+      throw new ApiError(400, "Checkout session id is required");
+    }
+
+    const user = await subscriptionRepository.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    const stripe = await getStripe();
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["subscription"],
+    });
+
+    if (session.metadata?.userId !== user.id.toString()) {
+      throw new ApiError(403, "Checkout session does not belong to this user");
+    }
+
+    if (session.payment_status !== "paid" && session.status !== "complete") {
+      throw new ApiError(409, "Checkout session is not complete yet");
+    }
+
+    const stripeSubscription =
+      typeof session.subscription === "string"
+        ? await stripe.subscriptions.retrieve(session.subscription)
+        : session.subscription;
+
+    if (!stripeSubscription) {
+      throw new ApiError(409, "Stripe subscription is not available yet");
+    }
+
+    const updatedUser = await subscriptionRepository.updateStripeSubscription(
+      user.id,
+      toSubscriptionPayload({
+        subscription: stripeSubscription,
+        customerId: session.customer,
+      })
+    );
+
+    return serializeSubscription(updatedUser);
   },
 
   async handleStripeWebhook(rawBody, signature) {
@@ -119,16 +174,13 @@ export const subscriptionService = {
 
       if (userId && session.subscription) {
         const subscription = await stripe.subscriptions.retrieve(session.subscription);
-        await subscriptionRepository.updateStripeSubscription(userId, {
-          plan: planForStripeStatus(subscription.status),
-          stripeCustomerId: session.customer,
-          stripeSubscriptionId: subscription.id,
-          subscriptionStatus: subscription.status,
-          subscriptionCancelAtPeriodEnd: Boolean(subscription.cancel_at_period_end),
-          subscriptionCurrentPeriodEnd: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000)
-            : null,
-        });
+        await subscriptionRepository.updateStripeSubscription(
+          userId,
+          toSubscriptionPayload({
+            subscription,
+            customerId: session.customer,
+          })
+        );
       }
     }
 
@@ -140,16 +192,10 @@ export const subscriptionService = {
         (await subscriptionRepository.findByStripeCustomerId(subscription.customer));
 
       if (user) {
-        await subscriptionRepository.updateStripeSubscription(user.id, {
-          plan: planForStripeStatus(subscription.status),
-          stripeCustomerId: subscription.customer,
-          stripeSubscriptionId: subscription.id,
-          subscriptionStatus: subscription.status,
-          subscriptionCancelAtPeriodEnd: Boolean(subscription.cancel_at_period_end),
-          subscriptionCurrentPeriodEnd: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000)
-            : null,
-        });
+        await subscriptionRepository.updateStripeSubscription(
+          user.id,
+          toSubscriptionPayload({ subscription })
+        );
       }
     }
 

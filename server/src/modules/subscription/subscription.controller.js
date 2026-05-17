@@ -6,6 +6,14 @@ export const subscriptionController = {
     res.json({ subscription });
   },
 
+  async confirmCheckout(req, res) {
+    const subscription = await subscriptionService.confirmCheckoutSession(
+      req.user.id,
+      req.query.sessionId
+    );
+    res.json({ subscription });
+  },
+
   async update(req, res) {
     const subscription = await subscriptionService.updatePlan(req.user.id, req.body.plan);
     res.json({ subscription });
