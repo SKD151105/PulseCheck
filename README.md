@@ -42,7 +42,7 @@ PulseCheck is built for makers who need a clean, reliable visibility layer for t
 
 | Domain | Capability | Details |
 | --- | --- | --- |
-| Auth | JWT-based login with bcrypt hashing | Secure register and login flow |
+| Auth | JWT sessions with Google OAuth support | Email/password + Google sign-in, refresh, logout |
 | Plans | FREE and PRO plan rules | Monitor limits and interval enforcement |
 | Monitoring | Scheduled uptime checks | Background worker executes due monitors |
 | Telemetry | Check logs with response timing | Status history and latency tracking |
@@ -140,6 +140,10 @@ Base URL (development): http://localhost:5000/api
 
 - POST /auth/register
 - POST /auth/login
+- POST /auth/google
+- POST /auth/refresh
+- POST /auth/logout
+- GET /auth/me
 
 ### Monitors
 
@@ -166,6 +170,7 @@ MONGO_URI=mongodb://127.0.0.1:27017/pulsecheck
 REDIS_URL=redis://127.0.0.1:6379
 JWT_SECRET=replace_with_a_secure_secret
 JWT_REFRESH_SECRET=replace_with_a_second_secure_secret
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
 CLIENT_URL=http://localhost:5173
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_PRO_PRICE_ID=price_...
@@ -178,6 +183,7 @@ ALLOW_MANUAL_PLAN_UPDATES=false
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
+VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id
 ```
 
 ## Local Setup
