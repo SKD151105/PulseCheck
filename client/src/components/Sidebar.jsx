@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import ThemeToggle from "./ThemeToggle";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -91,6 +92,22 @@ export default function Sidebar() {
     <>
       <aside className="sidebar">
         <div>
+          <div className="sidebar__mobile-bar">
+            <div className="sidebar__mobile-brand">
+              <span className="sidebar__brand-dot" />
+              <span>PulseCheck</span>
+            </div>
+            <div className="sidebar__mobile-actions">
+              <ThemeToggle />
+              <span className={`sidebar__plan sidebar__plan--${user?.plan?.toLowerCase()}`}>
+                {user?.plan} plan
+              </span>
+              <button className="sidebar__logout sidebar__logout--mobile" onClick={() => setIsLogoutOpen(true)}>
+                Logout
+              </button>
+            </div>
+          </div>
+
           <div className="sidebar__brand">
             <span className="sidebar__brand-dot" />
             <span>PulseCheck</span>

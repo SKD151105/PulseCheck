@@ -14,6 +14,8 @@
 .add-monitor-row {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .add-monitor-input,
@@ -24,11 +26,17 @@
   background: var(--bg-input);
   color: var(--text-primary);
   transition: 0.15s ease;
+  min-width: 0;
 }
 
 .add-monitor-input {
-  flex: 1;
+  flex: 1 1 260px;
+  width: 100%;
   padding: 0 12px;
+  height: 40px;
+  min-height: 40px;
+  max-height: 40px;
+  line-height: 40px;
 }
 
 .add-monitor-input::placeholder {
@@ -78,7 +86,7 @@
   color: var(--status-down);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1024px) {
   .add-monitor-row {
     flex-direction: column;
   }

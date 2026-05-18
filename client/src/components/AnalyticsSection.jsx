@@ -164,7 +164,7 @@ export default function AnalyticsSection({ analytics, isLoading }) {
       </div>
 
       {unstableMonitors.length ? (
-        <div className="analytics-panel">
+        <div className="analytics-panel analytics-panel--stacked">
           <div className="analytics-panel__title">Needs attention</div>
           <div className="analytics-list">
             {unstableMonitors.map((item) => (

@@ -6,11 +6,13 @@
 .dashboard-main {
   flex: 1;
   min-width: 0;
+  overflow-x: hidden;
 }
 
 .dashboard-shell {
   max-width: 1240px;
-  margin: 0 auto 0 8px;
+  width: 100%;
+  margin: 0 auto;
   padding: 28px 28px 28px 36px;
 }
 
@@ -332,6 +334,7 @@
 
   .dashboard-hero {
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .dashboard-hero__title {
@@ -339,7 +342,7 @@
   }
 
   .dashboard-shell {
-    padding: 20px;
+    padding: 22px 20px 26px;
   }
 
   .dashboard-section__topbar {
@@ -349,5 +352,27 @@
 
   .dashboard-settings {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-shell {
+    padding: 20px 16px 24px;
+  }
+
+  .dashboard-hero__meta {
+    flex-wrap: wrap;
+  }
+
+  .dashboard-search {
+    width: 100%;
+  }
+
+  .dashboard-hero__plan {
+    display: none;
+  }
+
+  .dashboard-section {
+    margin-top: 28px;
   }
 }
