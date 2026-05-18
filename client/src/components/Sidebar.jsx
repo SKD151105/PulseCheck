@@ -104,7 +104,7 @@ export default function Sidebar() {
             <div className="sidebar__mobile-actions">
               <ThemeToggle />
               <span className={`sidebar__plan sidebar__plan--${user?.plan?.toLowerCase()}`}>
-                {user?.plan} plan
+                {user?.plan === "PRO" ? "PRO" : "FREE"}
               </span>
               <button className="sidebar__logout sidebar__logout--mobile" onClick={() => setIsLogoutOpen(true)}>
                 Logout

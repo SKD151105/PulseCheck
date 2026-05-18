@@ -343,7 +343,7 @@ export default function Dashboard() {
             </div>
             <div className="dashboard-hero__meta">
               <span className={`dashboard-hero__plan dashboard-hero__plan--${user?.plan?.toLowerCase()}`}>
-                {user?.plan} plan
+                {user?.plan === "PRO" ? "PRO" : "FREE"}
               </span>
               {user?.plan !== "PRO" ? (
                 <button

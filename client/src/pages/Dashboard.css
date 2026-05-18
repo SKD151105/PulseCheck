@@ -327,7 +327,7 @@
   color: var(--text-muted);
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
   .dashboard-layout {
     flex-direction: column;
   }
@@ -353,9 +353,7 @@
   .dashboard-settings {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 1024px) {
   .dashboard-shell {
     padding: 20px 16px 24px;
   }
