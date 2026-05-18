@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 import "./Login.css";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, googleAuth } = useAuth();
   const [form, setForm] = useState({ email: "", password: "", rememberMe: true });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -31,6 +32,20 @@ export default function Login() {
     }
   };
 
+  const handleGoogleLogin = async (credential) => {
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await googleAuth(credential, "login");
+      navigate("/");
+    } catch (submitError) {
+      setError(submitError.response?.data?.message || "Google sign-in failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="auth-page">
       <form className="auth-card" onSubmit={handleSubmit}>
@@ -40,6 +55,14 @@ export default function Login() {
         </div>
 
         <div className="auth-title">Sign in</div>
+
+        <GoogleSignInButton
+          onCredential={handleGoogleLogin}
+          onError={(message) => setError(message)}
+          text="signin_with"
+        />
+
+        <div className="auth-divider">Or</div>
 
         <div className="auth-field">
           <label htmlFor="email">Email</label>

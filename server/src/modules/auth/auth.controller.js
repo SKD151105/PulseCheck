@@ -35,6 +35,12 @@ export const authController = {
     res.json({ user: data.user, token: data.token });
   },
 
+  async google(req, res) {
+    const data = await authService.googleAuth(req.body);
+    setRefreshCookie(res, data.refreshToken, data.rememberMe);
+    res.json({ user: data.user, token: data.token });
+  },
+
   async me(req, res) {
     const user = await authService.getCurrentUser(req.user.id);
     res.json({ user });

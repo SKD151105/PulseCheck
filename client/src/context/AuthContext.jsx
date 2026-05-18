@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import api, { TOKEN_KEY, setStoredToken } from "../services/api";
 import { connectSocket, disconnectSocket } from "../services/socket";
 
@@ -8,8 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
+  const logoutRequestedRef = useRef(false);
 
   const persistSession = (nextToken, nextUser) => {
+    logoutRequestedRef.current = false;
     setStoredToken(nextToken);
     setToken(nextToken);
     setUser(nextUser);
@@ -41,14 +43,30 @@ export const AuthProvider = ({ children }) => {
     return response.data.user;
   };
 
-  const logout = () => {
-    api.post("/auth/logout").catch(() => {});
-    clearSession();
+  const googleAuth = async (credential, intent = "login") => {
+    const response = await api.post("/auth/google", { credential, intent });
+    persistSession(response.data.token, response.data.user);
+    return response.data.user;
+  };
+
+  const logout = async () => {
+    logoutRequestedRef.current = true;
+    try {
+      await api.post("/auth/logout");
+    } catch {
+      // Ignore network/logout failures, local session is cleared regardless.
+    } finally {
+      clearSession();
+      setIsBootstrapping(false);
+    }
   };
 
   useEffect(() => {
     const bootstrap = async () => {
       try {
+        if (logoutRequestedRef.current) {
+          return;
+        }
         const activeToken = token || (await api.post("/auth/refresh")).data.token;
         setStoredToken(activeToken);
         setToken(activeToken);
@@ -72,6 +90,7 @@ export const AuthProvider = ({ children }) => {
         isBootstrapping,
         register,
         login,
+        googleAuth,
         logout,
         refreshUser,
         setUser,
