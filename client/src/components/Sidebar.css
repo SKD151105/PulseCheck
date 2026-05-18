@@ -55,6 +55,16 @@
   animation: pulse-green 2s infinite;
 }
 
+.sidebar__brand-dot--up {
+  background: var(--status-up);
+  animation: pulse-green 2s infinite;
+}
+
+.sidebar__brand-dot--down {
+  background: var(--status-down);
+  animation: none;
+}
+
 .sidebar__nav {
   display: flex;
   flex-direction: column;

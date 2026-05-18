@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useSocketContext } from "../context/SocketContext";
 import ThemeToggle from "./ThemeToggle";
 import "./Sidebar.css";
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const { isConnected, hasConnected } = useSocketContext();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   const lockRef = useRef({ section: null, timerId: null });
@@ -88,13 +90,15 @@ export default function Sidebar() {
     []
   );
 
+  const dotStatusClass = hasConnected && !isConnected ? "sidebar__brand-dot--down" : "sidebar__brand-dot--up";
+
   return (
     <>
       <aside className="sidebar">
         <div>
           <div className="sidebar__mobile-bar">
             <div className="sidebar__mobile-brand">
-              <span className="sidebar__brand-dot" />
+              <span className={`sidebar__brand-dot ${dotStatusClass}`} />
               <span>PulseCheck</span>
             </div>
             <div className="sidebar__mobile-actions">
@@ -109,7 +113,7 @@ export default function Sidebar() {
           </div>
 
           <div className="sidebar__brand">
-            <span className="sidebar__brand-dot" />
+            <span className={`sidebar__brand-dot ${dotStatusClass}`} />
             <span>PulseCheck</span>
           </div>
 
