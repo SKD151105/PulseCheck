@@ -55,6 +55,14 @@ const InsightCard = ({ label, value, tone, meta }) => (
 export default function AnalyticsSection({ analytics, isLoading }) {
   const [performancePage, setPerformancePage] = useState(1);
 
+  useEffect(() => {
+    if (!analytics) {
+      return;
+    }
+
+    setPerformancePage(1);
+  }, [analytics]);
+
   if (isLoading || !analytics) {
     return null;
   }
@@ -66,10 +74,6 @@ export default function AnalyticsSection({ analytics, isLoading }) {
     (safePerformancePage - 1) * PERFORMANCE_PER_PAGE,
     safePerformancePage * PERFORMANCE_PER_PAGE
   );
-
-  useEffect(() => {
-    setPerformancePage(1);
-  }, [monitorPerformance.length]);
 
   return (
     <section className="analytics" id="analytics">
