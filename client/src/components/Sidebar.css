@@ -1,8 +1,8 @@
 .sidebar {
   position: sticky;
   top: 0;
-  flex: 0 0 clamp(210px, 14vw, 232px);
-  width: clamp(210px, 14vw, 232px);
+  flex: 0 0 clamp(220px, 14.5vw, 244px);
+  width: clamp(220px, 14.5vw, 244px);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -102,7 +102,7 @@
 }
 
 .sidebar__user-email {
-  font-size: 13px;
+  font-size: 10px;
   color: var(--text-secondary);
   word-break: break-word;
 }

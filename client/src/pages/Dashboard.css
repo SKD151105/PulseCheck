@@ -13,7 +13,7 @@
   max-width: 100%;
   width: 100%;
   margin: 0;
-  padding: 28px clamp(20px, 3vw, 48px);
+  padding: 24px clamp(14px, 2vw, 28px);
 }
 
 .dashboard-hero {
