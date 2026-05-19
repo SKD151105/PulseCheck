@@ -47,6 +47,9 @@
   margin: 6px 0 1px 0;
   color: var(--text-secondary);
 }
+.dashboard-hero__theme-toggle {
+  display: none;
+}
 
 .dashboard-hero__meta {
   display: flex;
@@ -325,6 +328,12 @@
 .empty-state__text {
   font-size: 13px;
   color: var(--text-muted);
+}
+
+@media (min-width: 1025px) {
+  .dashboard-hero__theme-toggle {
+    display: flex;
+  }
 }
 
 @media (max-width: 1024px) {

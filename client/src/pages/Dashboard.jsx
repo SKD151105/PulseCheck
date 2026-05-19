@@ -7,6 +7,7 @@ import MonitorDetailsModal from "../components/MonitorDetailsModal";
 import Skeleton from "../components/Skeleton";
 import AnalyticsSection from "../components/AnalyticsSection";
 import ConfirmDialog from "../components/ConfirmDialog";
+import ThemeToggle from "../components/ThemeToggle";
 import { useToast } from "../context/ToastContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
@@ -342,6 +343,9 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="dashboard-hero__meta">
+              <div className="dashboard-hero__theme-toggle">
+                <ThemeToggle />
+              </div>
               <span className={`dashboard-hero__plan dashboard-hero__plan--${user?.plan?.toLowerCase()}`}>
                 {user?.plan === "PRO" ? "PRO" : "FREE"}
               </span>
