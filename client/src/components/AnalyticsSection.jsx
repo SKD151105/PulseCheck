@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import "./AnalyticsSection.css";
+
+const PERFORMANCE_PER_PAGE = 10;
 
 const formatValue = (value, suffix = "") => {
   if (value === null || value === undefined) {
@@ -50,11 +53,23 @@ const InsightCard = ({ label, value, tone, meta }) => (
 );
 
 export default function AnalyticsSection({ analytics, isLoading }) {
+  const [performancePage, setPerformancePage] = useState(1);
+
   if (isLoading || !analytics) {
     return null;
   }
 
   const { overview, highlights, topReliable, unstableMonitors, recentIncidents, monitorPerformance } = analytics;
+  const totalPerformancePages = Math.max(1, Math.ceil(monitorPerformance.length / PERFORMANCE_PER_PAGE));
+  const safePerformancePage = Math.min(performancePage, totalPerformancePages);
+  const visiblePerformance = monitorPerformance.slice(
+    (safePerformancePage - 1) * PERFORMANCE_PER_PAGE,
+    safePerformancePage * PERFORMANCE_PER_PAGE
+  );
+
+  useEffect(() => {
+    setPerformancePage(1);
+  }, [monitorPerformance.length]);
 
   return (
     <section className="analytics" id="analytics">
@@ -150,7 +165,7 @@ export default function AnalyticsSection({ analytics, isLoading }) {
             <span>Last incident</span>
           </div>
           <div className="analytics-table__body">
-            {monitorPerformance.map((item) => (
+            {visiblePerformance.map((item) => (
               <div className="analytics-table__row" key={item.monitorId}>
                 <span title={item.url}>{item.url}</span>
                 <span>{formatValue(item.uptimePercentage, "%")}</span>
@@ -161,6 +176,29 @@ export default function AnalyticsSection({ analytics, isLoading }) {
             ))}
           </div>
         </div>
+        {totalPerformancePages > 1 ? (
+          <div className="analytics-pagination">
+            <button
+              className="analytics-pagination__button"
+              type="button"
+              disabled={safePerformancePage === 1}
+              onClick={() => setPerformancePage((page) => Math.max(1, page - 1))}
+            >
+              Previous
+            </button>
+            <span className="analytics-pagination__label">
+              Page {safePerformancePage} of {totalPerformancePages}
+            </span>
+            <button
+              className="analytics-pagination__button"
+              type="button"
+              disabled={safePerformancePage === totalPerformancePages}
+              onClick={() => setPerformancePage((page) => Math.min(totalPerformancePages, page + 1))}
+            >
+              Next
+            </button>
+          </div>
+        ) : null}
       </div>
 
       {unstableMonitors.length ? (
