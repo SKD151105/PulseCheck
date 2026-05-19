@@ -1,8 +1,8 @@
 .sidebar {
   position: sticky;
   top: 0;
-  flex: 0 0 220px;
-  width: 220px;
+  flex: 0 0 clamp(210px, 14vw, 232px);
+  width: clamp(210px, 14vw, 232px);
   height: 100vh;
   display: flex;
   flex-direction: column;
