@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema(
     alertPreferences: {
       enabled: {
         type: Boolean,
-        default: true,
+        default: false,
       },
       email: {
         type: String,

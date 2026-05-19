@@ -46,7 +46,7 @@ const serializeAuthUser = (user) => ({
   subscriptionCancelAtPeriodEnd: user.subscriptionCancelAtPeriodEnd,
   subscriptionCurrentPeriodEnd: user.subscriptionCurrentPeriodEnd,
   alertPreferences: {
-    enabled: user.alertPreferences?.enabled ?? true,
+    enabled: user.alertPreferences?.enabled ?? false,
     email: user.alertPreferences?.email || "",
   },
 });

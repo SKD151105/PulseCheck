@@ -33,10 +33,17 @@ const checkMonitorHealth = async (monitor) => {
   const startedAt = Date.now();
 
   try {
-    await axios.get(monitor.url, {
+    const response = await axios.get(monitor.url, {
       timeout: 10000,
-      validateStatus: (status) => status < 500,
+      validateStatus: () => true,
     });
+
+    if (response.status >= 400) {
+      return {
+        status: MONITOR_STATUS.DOWN,
+        responseTime: Date.now() - startedAt,
+      };
+    }
 
     return {
       status: MONITOR_STATUS.UP,

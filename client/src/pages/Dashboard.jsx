@@ -46,10 +46,11 @@ export default function Dashboard() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isBillingLoading, setIsBillingLoading] = useState(false);
-  const [alertSettings, setAlertSettings] = useState({ enabled: true, email: "" });
+  const [alertSettings, setAlertSettings] = useState({ enabled: false, email: "" });
   const [alertHistory, setAlertHistory] = useState([]);
   const [isSavingAlerts, setIsSavingAlerts] = useState(false);
   const analyticsTimerRef = useRef(null);
+  const alertHistoryTimerRef = useRef(null);
 
   const syncBillingPlan = async (sessionId) => {
     if (!sessionId) {
@@ -200,6 +201,9 @@ export default function Dashboard() {
       if (analyticsTimerRef.current) {
         window.clearTimeout(analyticsTimerRef.current);
       }
+      if (alertHistoryTimerRef.current) {
+        window.clearTimeout(alertHistoryTimerRef.current);
+      }
     };
   }, []);
 
@@ -229,6 +233,14 @@ export default function Dashboard() {
         title: payload.status === "UP" ? "Monitor recovered" : "Monitor is down",
         message: payload.url,
       });
+
+      if (alertHistoryTimerRef.current) {
+        window.clearTimeout(alertHistoryTimerRef.current);
+      }
+
+      alertHistoryTimerRef.current = window.setTimeout(() => {
+        loadAlertHistory();
+      }, 600);
     };
 
     socket.on("monitor_checked", handleMonitorChecked);

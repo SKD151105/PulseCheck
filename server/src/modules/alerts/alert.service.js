@@ -43,7 +43,7 @@ const buildAlertMessage = ({ url, status, incidentEvent, checkedAt, responseTime
 };
 
 const serializeSettings = (user) => ({
-  enabled: user.alertPreferences?.enabled ?? true,
+  enabled: user.alertPreferences?.enabled ?? false,
   email: user.alertPreferences?.email || user.email,
 });
 
@@ -87,7 +87,7 @@ export const alertService = {
       throw new ApiError(404, "User not found");
     }
 
-    const enabled = payload.enabled !== undefined ? Boolean(payload.enabled) : user.alertPreferences?.enabled ?? true;
+    const enabled = payload.enabled !== undefined ? Boolean(payload.enabled) : user.alertPreferences?.enabled ?? false;
     const email = normalizeAlertEmail(payload.email ?? user.alertPreferences?.email ?? "");
 
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -116,7 +116,9 @@ export const alertService = {
     const recipientEmail = alertPreferences.email || user.email;
     const event = payload.incidentEvent || "status_change";
 
-    if (alertPreferences.enabled === false) {
+    const alertsEnabled = alertPreferences.enabled === true;
+
+    if (!alertsEnabled) {
       await recordNotification({
         userId: payload.userId,
         url: payload.url,
