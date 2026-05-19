@@ -100,36 +100,47 @@ flowchart TD
 
 ## Project Structure
 
+# Project Structure
+
 ```text
 PulseCheck/
-	client/
-		src/
-			components/
-			context/
-			pages/
-			services/
-			App.jsx
-			index.css
-			main.jsx
-		.env.example
-		package.json
-	server/
-		src/
-			config/
-			middlewares/
-			modules/
-				auth/
-				checks/
-				monitors/
-				subscription/
-			sockets/
-			utils/
-			workers/
-			app.js
-			server.js
-		.env.example
-		package.json
-	README.md
+├── assets/                               # Static assets (icons, images, banners, etc.)
+├── client/                               # Frontend application
+└── server/
+    └── src/
+        ├── config/                       # App configuration files
+        │   ├── db.js                     # Database connection setup
+        │   └── redis.js                  # Redis client configuration
+        │
+        ├── middlewares/                  # Express middlewares
+        │   ├── auth.middleware.js        # Authentication & authorization middleware
+        │   ├── error.middleware.js       # Global error handling middleware
+        │   ├── rateLimit.middleware.js   # API rate limiting
+        │   └── request.middleware.js     # Request validation/logging middleware
+        │
+        ├── modules/                      # Feature-based modules
+        │   ├── alerts/                   # Alert management system
+        │   ├── analytics/                # Analytics & reporting
+        │   ├── auth/                     # Authentication module
+        │   ├── checks/                   # Health/status check logic
+        │   ├── incidents/                # Incident tracking & management
+        │   ├── monitors/                 # Monitoring services & uptime checks
+        │   └── subscription/             # Subscription & billing module
+        │
+        ├── sockets/
+        │   └── socket.js                 # WebSocket / Socket.IO configuration
+        │
+        ├── utils/                        # Utility/helper functions
+        │   ├── ApiError.js               # Custom API error class
+        │   ├── asyncHandler.js           # Async error wrapper
+        │   ├── constants.js              # Application constants
+        │   └── logger.js                 # Logging utility
+        │
+        ├── workers/
+        │   └── monitor.worker.js         # Background monitoring worker
+        │
+        ├── app.js                        # Express app initialization
+        └── server.js                     # Server entry point
 ```
 
 ## API Surface
