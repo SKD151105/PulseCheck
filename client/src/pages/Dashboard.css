@@ -152,6 +152,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 14px;
+  min-width: 0;
 }
 
 .dashboard-settings__panel {
@@ -159,6 +160,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--bg-card);
+  min-width: 0;
 }
 
 .dashboard-settings__text {
@@ -229,6 +231,12 @@
   gap: 12px;
   padding: 10px 0;
   border-top: 1px solid var(--border);
+  min-width: 0;
+}
+
+.dashboard-settings__history-row > div {
+  flex: 1;
+  min-width: 0;
 }
 
 .dashboard-settings__history-row:first-child {
@@ -248,6 +256,8 @@
 .dashboard-settings__empty {
   color: var(--text-muted);
   font-size: 12px;
+  max-width: 100%;
+  word-break: break-all;
 }
 
 .dashboard-settings__history-status {
@@ -257,6 +267,7 @@
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .dashboard-settings__history-status--sent {
