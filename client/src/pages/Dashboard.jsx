@@ -399,7 +399,7 @@ export default function Dashboard() {
                   placeholder={user?.email || "alerts@example.com"}
                 />
                 <button className="dashboard-settings__button" type="submit" disabled={isSavingAlerts}>
-                  {isSavingAlerts ? "Saving..." : "Save alerts"}
+                  {isSavingAlerts ? "Saving..." : "Save email"}
                 </button>
               </form>
             </div>
