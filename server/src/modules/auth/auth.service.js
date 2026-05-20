@@ -138,14 +138,10 @@ export const authService = {
   },
 
   async googleAuth(payload) {
-    const { credential, intent = "login" } = payload || {};
+    const { credential } = payload || {};
 
     if (!credential) {
       throw new ApiError(400, "Google credential is required");
-    }
-
-    if (!["login", "register"].includes(intent)) {
-      throw new ApiError(400, "Invalid Google auth intent");
     }
 
     const googlePayload = await verifyGoogleCredential(credential);
@@ -153,10 +149,6 @@ export const authService = {
     const googleId = googlePayload.sub;
 
     let user = await authRepository.findByEmail(email);
-
-    if (intent === "login" && !user) {
-      throw new ApiError(404, "No Google account found for this email. Sign up with Google first.");
-    }
 
     if (!user) {
       user = await authRepository.create({
@@ -166,10 +158,10 @@ export const authService = {
         profileImage: googlePayload.picture || null,
       });
       logger.info("User registered via Google", { userId: user.id, email: user.email });
-    } else if (user.authProvider !== "google") {
-      throw new ApiError(409, "An account with this email already exists. Sign in with email and password.");
     } else if (user.googleId && user.googleId !== googleId) {
       throw new ApiError(409, "Google account does not match the existing user");
+    } else if (!user.googleId) {
+      user = await authRepository.updateGoogleId(user.id, googleId);
     }
 
     logger.info("User signed in with Google", { userId: user.id, email: user.email });

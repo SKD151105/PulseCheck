@@ -20,4 +20,7 @@ export const authRepository = {
       { returnDocument: "after", runValidators: true }
     );
   },
+  updateGoogleId(id, googleId) {
+    return User.findByIdAndUpdate(id, { googleId }, { returnDocument: "after" });
+  },
 };

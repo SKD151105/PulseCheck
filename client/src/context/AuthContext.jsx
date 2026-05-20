@@ -43,8 +43,8 @@ export const AuthProvider = ({ children }) => {
     return response.data.user;
   };
 
-  const googleAuth = async (credential, intent = "login") => {
-    const response = await api.post("/auth/google", { credential, intent });
+  const googleAuth = async (credential) => {
+    const response = await api.post("/auth/google", { credential });
     persistSession(response.data.token, response.data.user);
     return response.data.user;
   };

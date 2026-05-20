@@ -32,7 +32,7 @@ export default function Register() {
     setIsSubmitting(true);
 
     try {
-      await googleAuth(credential, "register");
+      await googleAuth(credential);
       navigate("/");
     } catch (submitError) {
       setError(submitError.response?.data?.message || "Google sign-up failed");

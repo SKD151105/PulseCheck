@@ -37,7 +37,7 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      await googleAuth(credential, "login");
+      await googleAuth(credential);
       navigate("/");
     } catch (submitError) {
       setError(submitError.response?.data?.message || "Google sign-in failed");
