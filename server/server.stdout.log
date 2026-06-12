@@ -1,0 +1,7 @@
+
+> pulsecheck-server@1.0.0 start
+> node src/server.js
+
+[2026-06-12T10:29:11.509Z] INFO Starting PulseCheck server
+[2026-06-12T10:29:11.834Z] INFO MongoDB connected
+[2026-06-12T10:29:11.874Z] INFO Monitor worker started

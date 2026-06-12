@@ -2,9 +2,10 @@
   position: relative;
   height: 74px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-sm);
 }
 
 .skeleton-shimmer {

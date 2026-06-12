@@ -1,8 +1,11 @@
 .add-monitor-card {
   padding: 20px 24px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-md);
+  position: relative;
+  z-index: 1;
 }
 
 .add-monitor-note {
@@ -21,9 +24,10 @@
 .add-monitor-input,
 .add-monitor-select {
   height: 40px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   background: var(--bg-input);
+  box-shadow: var(--neo-shadow-inset-sm);
   color: var(--text-primary);
   transition: 0.15s ease;
   min-width: 0;
@@ -44,23 +48,46 @@
 }
 
 .add-monitor-select {
+  /* height: 40px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: var(--bg-input);
+  box-shadow: var(--neo-shadow-inset-sm);
+  color: var(--text-primary);
+  transition: 0.15s ease;
+  min-width: 0;
   width: 140px;
-  padding: 0 12px;
+  padding: 0 36px 0 12px;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px; */
+  width: 140px;
+}
+
+/* Firefox sometimes still shows its own arrow even with appearance: none */
+.add-monitor-select::-ms-expand {
+  display: none;
 }
 
 .add-monitor-input:focus,
 .add-monitor-select:focus {
   outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+  box-shadow: var(--neo-shadow-inset-sm), 0 0 0 2px var(--border-focus);
 }
 
 .add-monitor-button {
   width: 140px;
   height: 40px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--accent);
+  box-shadow: var(--neo-shadow-primary);
   color: #fff;
   font-weight: 500;
   cursor: pointer;
@@ -72,7 +99,7 @@
 }
 
 .add-monitor-button:active {
-  transform: scale(0.99);
+  box-shadow: var(--neo-shadow-primary), var(--neo-shadow-inset-sm);
 }
 
 .add-monitor-button:disabled {

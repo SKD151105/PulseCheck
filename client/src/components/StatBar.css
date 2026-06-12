@@ -1,14 +1,15 @@
 .stat-bar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 20px;
 }
 
 .stat-card {
   padding: 18px 20px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-md);
 }
 
 .stat-card__label {

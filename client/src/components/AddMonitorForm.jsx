@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import CustomSelect from "./CustomSelect";
 import "./AddMonitorForm.css";
 
 const INTERVAL_OPTIONS = [1, 2, 5, 10, 30];
@@ -8,7 +9,24 @@ export default function AddMonitorForm({ plan, isSubmitting, onSubmit }) {
   const [interval, setInterval] = useState("5");
   const [error, setError] = useState("");
 
-  const allowedIntervals = useMemo(() => (plan === "PRO" ? INTERVAL_OPTIONS : [5, 10, 30]), [plan]);
+  const allowedIntervals = useMemo(
+    () => (plan === "PRO" ? INTERVAL_OPTIONS : [5, 10, 30]),
+    [plan],
+  );
+
+  const intervalOptions = useMemo(
+    () =>
+      INTERVAL_OPTIONS.map((value) => {
+        const disabled = plan !== "PRO" && value < 5;
+        return {
+          value,
+          label: `${value}m`,
+          disabled,
+          title: disabled ? "Upgrade to PRO" : "",
+        };
+      }),
+    [plan],
+  );
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,7 +43,9 @@ export default function AddMonitorForm({ plan, isSubmitting, onSubmit }) {
 
   return (
     <form className="add-monitor-card" onSubmit={handleSubmit}>
-      <div className="add-monitor-note">Enter a URL and choose how often PulseCheck should check it.</div>
+      <div className="add-monitor-note">
+        Enter a URL and choose how often PulseCheck should check it.
+      </div>
       <div className="add-monitor-row">
         <input
           className="add-monitor-input"
@@ -35,28 +55,18 @@ export default function AddMonitorForm({ plan, isSubmitting, onSubmit }) {
           placeholder="https://example.com"
           required
         />
-        <select
+        <CustomSelect
           className="add-monitor-select"
           value={interval}
-          onChange={(event) => setInterval(event.target.value)}
+          onChange={(value) => setInterval(String(value))}
+          options={intervalOptions}
           title={plan !== "PRO" ? "Upgrade to PRO" : ""}
+        />
+        <button
+          className="add-monitor-button"
+          type="submit"
+          disabled={isSubmitting}
         >
-          {INTERVAL_OPTIONS.map((value) => {
-            const disabled = plan !== "PRO" && value < 5;
-
-            return (
-              <option
-                key={value}
-                value={value}
-                disabled={disabled}
-                title={disabled ? "Upgrade to PRO" : ""}
-              >
-                {value}m
-              </option>
-            );
-          })}
-        </select>
-        <button className="add-monitor-button" type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Adding..." : "Add Monitor"}
         </button>
       </div>

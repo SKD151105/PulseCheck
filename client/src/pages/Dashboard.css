@@ -1,6 +1,7 @@
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
+  background: var(--bg-base);
 }
 
 .dashboard-main {
@@ -59,16 +60,16 @@
 
 .dashboard-hero__plan {
   padding: 7px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   border-radius: 999px;
   background: var(--bg-surface);
+  box-shadow: var(--neo-shadow-raised-sm);
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
 }
 
 .dashboard-hero__plan--pro {
-  border-color: rgba(64, 99, 235, 0.28);
   color: var(--accent);
 }
 
@@ -76,8 +77,9 @@
   height: 34px;
   padding: 0 12px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--accent);
+  box-shadow: var(--neo-shadow-primary);
   color: #fff;
   font-size: 12px;
   font-weight: 600;
@@ -92,18 +94,19 @@
 .dashboard-banner {
   margin-top: 12px;
   padding: 10px 14px;
-  border: 1px solid var(--warning-border);
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   background: var(--warning-bg);
+  box-shadow: var(--neo-shadow-raised-sm);
   color: var(--warning-text);
 }
 
 .dashboard-shell > .add-monitor-card {
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .dashboard-section {
-  margin-top: 24px;
+  margin-top: 20px;
   scroll-margin-top: 24px;
 }
 
@@ -112,6 +115,8 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-section__heading span {
@@ -123,44 +128,47 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .dashboard-search {
   width: min(320px, 100%);
   height: 40px;
   padding: 0 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   background: var(--bg-input);
+  box-shadow: var(--neo-shadow-inset-sm);
   color: var(--text-primary);
 }
 
 .dashboard-search:focus {
   outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+  box-shadow: var(--neo-shadow-inset-sm), 0 0 0 2px var(--border-focus);
 }
 
 .dashboard-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
 }
 
 .dashboard-settings {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 14px;
+  gap: 20px;
   min-width: 0;
 }
 
 .dashboard-settings__panel {
   padding: 18px 20px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-md);
   min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-settings__text {
@@ -190,16 +198,16 @@
   width: 100%;
   height: 40px;
   padding: 0 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   background: var(--bg-input);
+  box-shadow: var(--neo-shadow-inset-sm);
   color: var(--text-primary);
 }
 
 .dashboard-settings__input:focus {
   outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+  box-shadow: var(--neo-shadow-inset-sm), 0 0 0 2px var(--border-focus);
 }
 
 .dashboard-settings__button {
@@ -207,8 +215,9 @@
   height: 38px;
   padding: 0 14px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--accent);
+  box-shadow: var(--neo-shadow-primary);
   color: #fff;
   font-weight: 500;
   cursor: pointer;
@@ -230,7 +239,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--divider);
   min-width: 0;
 }
 
@@ -263,7 +272,8 @@
 .dashboard-settings__history-status {
   padding: 3px 8px;
   border-radius: 999px;
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
+  box-shadow: var(--status-pill-shadow);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -271,13 +281,11 @@
 }
 
 .dashboard-settings__history-status--sent {
-  border-color: rgba(34, 197, 94, 0.2);
   background: var(--status-up-bg);
   color: var(--status-up);
 }
 
 .dashboard-settings__history-status--failed {
-  border-color: rgba(239, 68, 68, 0.2);
   background: var(--status-down-bg);
   color: var(--status-down);
 }
@@ -291,9 +299,10 @@
   place-items: center;
   gap: 6px;
   min-height: 320px;
-  border: 1px dashed var(--border);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-inset-md);
   color: var(--text-secondary);
 }
 
@@ -309,9 +318,10 @@
   min-width: 88px;
   height: 36px;
   padding: 0 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   background: var(--bg-surface);
+  box-shadow: var(--neo-shadow-raised-sm);
   color: var(--text-primary);
   cursor: pointer;
 }

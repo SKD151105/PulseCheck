@@ -5,15 +5,16 @@
 .analytics-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 18px;
   width: 100%;
 }
 
 .analytics-card,
 .analytics-panel {
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-md);
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
@@ -58,8 +59,8 @@
 .analytics-panels {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 12px;
+  gap: 20px;
+  margin-top: 20px;
   width: 100%;
 }
 
@@ -68,12 +69,16 @@
 }
 
 .analytics-panel--table {
-  margin-top: 12px;
+  margin-top: 20px;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .analytics-panel--stacked {
-  margin-top: 12px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .analytics-panel__empty {
@@ -141,7 +146,7 @@
 
 .analytics-table__head {
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -156,7 +161,7 @@
 
 .analytics-table__row {
   padding: 12px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
 }
 
 .analytics-table__row:last-child {
@@ -179,24 +184,23 @@
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 16px;
 }
 
 .analytics-pagination__button {
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-sm);
   color: var(--text-primary);
   padding: 8px 14px;
-  border-radius: 10px;
+  border-radius: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .analytics-pagination__button:hover:not(:disabled) {
-  border-color: rgba(125, 141, 255, 0.6);
-  box-shadow: 0 8px 18px rgba(55, 93, 255, 0.12);
-  transform: translateY(-1px);
+  box-shadow: var(--neo-shadow-inset-sm);
 }
 
 .analytics-pagination__button:disabled {

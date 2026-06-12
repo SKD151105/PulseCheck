@@ -15,11 +15,16 @@
   max-height: calc(100vh - 48px);
   overflow: auto;
   padding: 24px 32px 24px 24px;
-  scrollbar-gutter: stable;
-  border: 1px solid var(--border-strong);
+  border: 1px solid transparent;
   border-radius: 18px;
   background: var(--monitor-bg);
-  box-shadow: 0 0 0 1px var(--monitor-modal-ring), var(--shadow-modal);
+  box-shadow: 0 0 0 1px var(--monitor-modal-ring), var(--monitor-modal-shadow);
+}
+
+@supports (scrollbar-gutter: stable) {
+  .monitor-modal__card {
+    scrollbar-gutter: stable;
+  }
 }
 
 .monitor-modal__header,
@@ -58,21 +63,38 @@
 .monitor-modal__button {
   height: 40px;
   padding: 0 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-input);
-  color: var(--text-primary);
+  border: 0;
+  border-radius: 14px;
+  background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-sm);
+  color: var(--text-muted);
   cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.monitor-modal__button:hover {
+  background: var(--bg-base);
+  box-shadow: none;
+  color: var(--text-primary);
+}
+
+.monitor-modal__button:focus,
+.monitor-modal__button:focus-visible,
+.monitor-modal__button:active {
+  outline: none;
+  background: var(--bg-base);
+  box-shadow: none;
 }
 
 .monitor-modal__button--primary {
   border: 0;
   background: var(--accent);
+  box-shadow: var(--neo-shadow-primary);
   color: #fff;
 }
 
 .monitor-modal__button--secondary {
-  background: transparent;
+  background: var(--bg-card);
 }
 
 .monitor-modal__edit {
@@ -84,9 +106,10 @@
   flex: 1;
   height: 42px;
   padding: 0 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 14px;
   background: var(--bg-input);
+  box-shadow: var(--neo-shadow-inset-sm);
   color: var(--text-primary);
 }
 
@@ -97,15 +120,16 @@
 .monitor-modal__metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 20px;
   margin-top: 20px;
 }
 
 .monitor-modal__metric {
   padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--monitor-surface);
+  box-shadow: var(--monitor-modal-surface-shadow);
 }
 
 .monitor-modal__metric-label,
@@ -129,7 +153,7 @@
 .monitor-modal__charts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 20px;
   margin-top: 20px;
 }
 
@@ -148,7 +172,7 @@
 .monitor-modal__checks {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap:14px;
   margin-top: 14px;
 }
 
@@ -158,9 +182,10 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--monitor-surface);
+  box-shadow: var(--monitor-modal-surface-shadow);
 }
 
 .monitor-modal__timeline-status {
@@ -176,6 +201,7 @@
   width: fit-content;
   padding: 4px 10px;
   border-radius: 999px;
+  box-shadow: var(--status-pill-shadow);
   font-size: 11px;
   font-weight: 600;
 }
@@ -193,6 +219,14 @@
 .monitor-modal__empty,
 .monitor-modal__error {
   margin-top: 16px;
+}
+
+.monitor-modal__section .monitor-modal__empty {
+  padding: 14px 16px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: var(--monitor-surface);
+  box-shadow: var(--monitor-modal-surface-shadow);
 }
 
 .monitor-modal__error {

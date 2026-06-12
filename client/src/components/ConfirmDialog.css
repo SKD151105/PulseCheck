@@ -11,10 +11,11 @@
 .confirm-dialog__card {
   width: min(100%, 380px);
   padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
-  box-shadow: var(--shadow-modal);
+  /* box-shadow: var(--shadow-modal); */
+  overflow: hidden;
 }
 
 .confirm-dialog__title {
@@ -25,8 +26,10 @@
 }
 
 .confirm-dialog__text {
+  width: min(100%, 350px);
   margin: 8px 0 0;
   color: var(--text-secondary);
+  overflow: hidden;
 }
 
 .confirm-dialog__actions {
@@ -40,21 +43,22 @@
   min-width: 90px;
   height: 38px;
   padding: 0 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
+  border-radius: 14px;
+  border: 1px solid transparent;
   background: var(--bg-input);
+  box-shadow: var(--neo-shadow-raised-sm);
   color: var(--text-primary);
   cursor: pointer;
   transition: 0.15s ease;
 }
 
 .confirm-dialog__button--secondary:hover {
-  background: var(--bg-card-hover);
+  box-shadow: var(--neo-shadow-inset-sm);
 }
 
 .confirm-dialog__button--danger {
-  border-color: rgba(239, 68, 68, 0.18);
   background: var(--status-down);
+  box-shadow: none;
   color: #fff;
 }
 

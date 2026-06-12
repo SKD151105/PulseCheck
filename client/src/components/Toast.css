@@ -14,10 +14,11 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   border-left-width: 3px;
-  border-radius: 10px;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-md);
   animation: toast-enter 0.2s ease;
 }
 

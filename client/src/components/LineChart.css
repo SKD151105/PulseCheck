@@ -1,8 +1,9 @@
 .line-chart {
   padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
   background: var(--bg-card);
+  box-shadow: var(--neo-shadow-raised-sm);
 }
 
 .line-chart__header {
