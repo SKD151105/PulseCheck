@@ -3,6 +3,9 @@ dist/
 .DS_Store
 Thumbs.db
 
+server/.npm-cache/
+client/.npm-cache/
+
 server/.env
 client/.env
 
