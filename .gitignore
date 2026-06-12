@@ -3,5 +3,18 @@ dist/
 .DS_Store
 Thumbs.db
 
+server/.npm-cache/
+client/.npm-cache/
+
 server/.env
 client/.env
+
+client-localhost.stderr.log
+client-localhost.stdout.log
+client.stderr.log
+client.stdout.log
+
+server-localhost.stderr.log
+server-localhost.stdout.log
+server.stderr.log
+server.stdout.log
