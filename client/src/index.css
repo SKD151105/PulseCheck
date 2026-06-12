@@ -60,6 +60,18 @@
   box-sizing: border-box;
 }
 
+#root {
+  zoom: 1.1;
+}
+
+@-moz-document url-prefix() {
+  #root {
+    transform: scale(1.1);
+    transform-origin: top left;
+    width: 90.9%;
+  }
+}
+
 html,
 body,
 #root {
