@@ -483,7 +483,7 @@ export default function Dashboard() {
               </div>
               {alertHistory.length ? (
                 <div className="dashboard-settings__history">
-                  {alertHistory.map((notification) => (
+                  {alertHistory.slice(0, 3).map((notification) => (
                     <div
                       className="dashboard-settings__history-row"
                       key={notification.id}
