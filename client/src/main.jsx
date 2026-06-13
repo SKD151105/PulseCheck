@@ -7,6 +7,7 @@ import { ToastProvider } from "./context/ToastContext";
 import { SocketProvider } from "./context/SocketContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./index.css";
+import "./styles/neumorphic-overrides.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

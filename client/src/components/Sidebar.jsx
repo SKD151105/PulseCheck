@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useSocketContext } from "../context/SocketContext";
 import ThemeToggle from "./ThemeToggle";
+import StyleToggle from "./StyleToggle";
 import "./Sidebar.css";
 
 export default function Sidebar() {
@@ -87,10 +88,13 @@ export default function Sidebar() {
     () => () => {
       window.clearTimeout(lockRef.current.timerId);
     },
-    []
+    [],
   );
 
-  const dotStatusClass = hasConnected && !isConnected ? "sidebar__brand-dot--down" : "sidebar__brand-dot--up";
+  const dotStatusClass =
+    hasConnected && !isConnected
+      ? "sidebar__brand-dot--down"
+      : "sidebar__brand-dot--up";
 
   return (
     <>
@@ -102,11 +106,21 @@ export default function Sidebar() {
               <span>PulseCheck</span>
             </div>
             <div className="sidebar__mobile-actions">
-              <ThemeToggle />
-              <span className={`sidebar__plan sidebar__plan--${user?.plan?.toLowerCase()}`}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <StyleToggle />
+                <ThemeToggle />
+              </div>
+              <span
+                className={`sidebar__plan sidebar__plan--${user?.plan?.toLowerCase()}`}
+              >
                 {user?.plan === "PRO" ? "PRO" : "FREE"}
               </span>
-              <button className="sidebar__logout sidebar__logout--mobile" onClick={() => setIsLogoutOpen(true)}>
+              <button
+                className="sidebar__logout sidebar__logout--mobile"
+                onClick={() => setIsLogoutOpen(true)}
+              >
                 Logout
               </button>
             </div>
@@ -144,7 +158,10 @@ export default function Sidebar() {
 
         <div className="sidebar__footer">
           <div className="sidebar__user-email">{user?.email}</div>
-          <button className="sidebar__logout" onClick={() => setIsLogoutOpen(true)}>
+          <button
+            className="sidebar__logout"
+            onClick={() => setIsLogoutOpen(true)}
+          >
             Logout
           </button>
         </div>
@@ -162,12 +179,20 @@ export default function Sidebar() {
             <h2 className="sidebar-modal__title" id="logout-title">
               Log out?
             </h2>
-            <p className="sidebar-modal__text">Are you sure you want to log out of PulseCheck?</p>
+            <p className="sidebar-modal__text">
+              Are you sure you want to log out of PulseCheck?
+            </p>
             <div className="sidebar-modal__actions">
-              <button className="sidebar-modal__button sidebar-modal__button--secondary" onClick={() => setIsLogoutOpen(false)}>
+              <button
+                className="sidebar-modal__button sidebar-modal__button--secondary"
+                onClick={() => setIsLogoutOpen(false)}
+              >
                 Cancel
               </button>
-              <button className="sidebar-modal__button sidebar-modal__button--danger" onClick={handleLogout}>
+              <button
+                className="sidebar-modal__button sidebar-modal__button--danger"
+                onClick={handleLogout}
+              >
                 Logout
               </button>
             </div>

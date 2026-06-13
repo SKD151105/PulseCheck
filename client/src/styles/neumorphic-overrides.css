@@ -1,0 +1,322 @@
+/* ── Backgrounds & base ─────────────────── */
+[data-style="neumorphic"] body {
+    background: linear-gradient(180deg, #e3e8ef 0%, var(--bg-base) 100%);
+}
+
+[data-style="neumorphic"][data-theme="dark"] body {
+    background: linear-gradient(180deg, #2f3343 0%, #1a1e2f 100%);
+}
+
+[data-style="neumorphic"] .dashboard-layout {
+    background: var(--bg-base);
+}
+
+/* ── Border → shadow swap ───────────────── */
+[data-style="neumorphic"] .stat-card,
+[data-style="neumorphic"] .analytics-card,
+[data-style="neumorphic"] .analytics-panel,
+[data-style="neumorphic"] .monitor-card,
+[data-style="neumorphic"] .add-monitor-card,
+[data-style="neumorphic"] .dashboard-settings__panel,
+[data-style="neumorphic"] .skeleton-card,
+[data-style="neumorphic"] .toast {
+    border: none;
+    box-shadow: var(--neo-shadow-raised-md);
+}
+
+[data-style="neumorphic"] .line-chart {
+    border: none;
+    box-shadow: var(--neo-shadow-raised-sm);
+}
+
+/* ── Inputs ─────────────────────────────── */
+[data-style="neumorphic"] .add-monitor-input,
+[data-style="neumorphic"] .dashboard-search,
+[data-style="neumorphic"] .dashboard-settings__input,
+[data-style="neumorphic"] .monitor-modal__input {      
+    border: none;  
+    border-radius: 14px;
+    box-shadow: var(--neo-shadow-inset-sm);
+}
+
+[data-style="neumorphic"] .add-monitor-input:focus,
+[data-style="neumorphic"] .dashboard-search:focus,
+[data-style="neumorphic"] .dashboard-settings__input:focus,
+[data-style="neumorphic"] .monitor-modal__input:focus {  
+    border: none;
+    outline: none;
+    /* box-shadow: var(--neo-shadow-inset-sm), 0 0 0 2px var(--border-focus); */
+}
+
+/* ── Buttons ────────────────────────────── */
+[data-style="neumorphic"] .add-monitor-button,
+[data-style="neumorphic"] .dashboard-settings__button,
+[data-style="neumorphic"] .monitor-modal__button--primary {
+    border-radius: 14px;
+    box-shadow: var(--neo-shadow-primary);
+}
+
+[data-style="neumorphic"] .analytics-pagination__button,
+[data-style="neumorphic"] .confirm-dialog__button--secondary,
+[data-style="neumorphic"] .sidebar-modal__button--secondary {
+    border-color: transparent;
+    border-radius: 14px;
+    box-shadow: var(--neo-shadow-raised-sm);
+}
+
+[data-style="neumorphic"] .analytics-pagination__button:hover:not(:disabled),
+[data-style="neumorphic"] .confirm-dialog__button--secondary:hover,
+[data-style="neumorphic"] .sidebar-modal__button--secondary:hover {
+    box-shadow: var(--neo-shadow-inset-sm);
+}
+
+/* ── Border radius ──────────────────────── */
+[data-style="neumorphic"] .stat-card,
+[data-style="neumorphic"] .analytics-card,
+[data-style="neumorphic"] .analytics-panel,
+[data-style="neumorphic"] .dashboard-settings__panel,
+[data-style="neumorphic"] .monitor-card,
+[data-style="neumorphic"] .monitor-modal__metric,
+[data-style="neumorphic"] .monitor-modal__check,
+[data-style="neumorphic"] .skeleton-card,
+[data-style="neumorphic"] .toast,
+[data-style="neumorphic"] .confirm-dialog__card,
+[data-style="neumorphic"] .sidebar-modal__card {
+    border-radius: 16px;
+}
+
+[data-style="neumorphic"] .add-monitor-input,
+[data-style="neumorphic"] .add-monitor-select,
+[data-style="neumorphic"] .add-monitor-button,
+[data-style="neumorphic"] .dashboard-search,
+[data-style="neumorphic"] .dashboard-settings__input,
+[data-style="neumorphic"] .dashboard-settings__button,
+[data-style="neumorphic"] .dashboard-banner {
+    border-radius: 14px;
+}
+
+/* ── Spacing / gaps ─────────────────────── */
+[data-style="neumorphic"] .stat-bar {
+    gap: 20px;
+}
+
+[data-style="neumorphic"] .analytics-grid {
+    gap: 18px;
+}
+
+[data-style="neumorphic"] .analytics-panels {
+    gap: 20px;
+    margin-top: 20px;
+}
+
+[data-style="neumorphic"] .analytics-panel--table,
+[data-style="neumorphic"] .analytics-panel--stacked {
+    margin-top: 20px;
+}
+
+[data-style="neumorphic"] .dashboard-list {
+    gap: 20px;
+}
+
+[data-style="neumorphic"] .dashboard-settings {
+    gap: 20px;
+}
+
+[data-style="neumorphic"] .monitor-modal__metrics {
+    gap: 20px;
+}
+
+[data-style="neumorphic"] .monitor-modal__charts {
+    gap: 20px;
+}
+
+[data-style="neumorphic"] .monitor-modal__checks {
+    gap: 14px;
+}
+
+[data-style="neumorphic"] .dashboard-shell>.add-monitor-card {
+    margin-top: 20px;
+}
+
+[data-style="neumorphic"] .dashboard-section {
+    margin-top: 20px;
+}
+
+/* ── Sidebar ────────────────────────────── */
+[data-style="neumorphic"] .sidebar {
+    border-right-color: transparent;
+    box-shadow: 12px 0 10px -8px rgba(163, 177, 198, 0.238);
+    margin-right: 10px;
+}
+
+[data-style="neumorphic"][data-theme="dark"] .sidebar {
+    box-shadow: 12px 0 10px -8px rgba(16, 24, 40, 0.48);
+}
+
+[data-style="neumorphic"] .sidebar__nav-link {
+    border-radius: 14px;
+    transition: box-shadow 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+[data-style="neumorphic"] .sidebar__nav-link:hover,
+[data-style="neumorphic"] .sidebar__nav-link.active {
+    border-color: transparent;
+    background: var(--bg-card-hover); 
+    box-shadow: var(--neo-shadow-inset-sm);
+    color: var(--text-primary);
+}
+
+
+[data-style="neumorphic"] .sidebar__plan {
+    border-color: transparent;
+    box-shadow: var(--neo-shadow-raised-sm);
+}
+
+[data-style="neumorphic"] .sidebar__plan--pro {
+    border-color: transparent;
+}
+
+[data-style="neumorphic"] .sidebar__bottom {
+    border-top-color: var(--divider);
+}
+
+/* ── Monitor card hover ─────────────────── */
+[data-style="neumorphic"] .monitor-card:hover {
+    background: var(--monitor-card-hover-bg);
+    box-shadow: var(--monitor-card-hover-shadow);
+    transform: translateY(1px);
+    transition: box-shadow 0.4s ease, transform 0.4s ease, background-color 0.4s ease;
+}
+
+/* ── Status pills ───────────────────────── */
+[data-style="neumorphic"] .monitor-card__badge,
+[data-style="neumorphic"] .monitor-modal__timeline-badge,
+[data-style="neumorphic"] .dashboard-settings__history-status {
+    border-color: transparent;
+    box-shadow: var(--status-pill-shadow);
+}
+
+/* ── Dividers ───────────────────────────── */
+[data-style="neumorphic"] .analytics-table__head,
+[data-style="neumorphic"] .analytics-table__row {
+    border-bottom-color: var(--divider);
+}
+
+[data-style="neumorphic"] .dashboard-settings__history-item {
+    border-top-color: var(--divider);
+}
+
+/* ── Empty state ────────────────────────── */
+[data-style="neumorphic"] .dashboard-empty {
+    border: 1px solid transparent;
+    border-radius: 16px;
+    box-shadow: var(--neo-shadow-inset-md);
+}
+
+/* ── Monitor modal ──────────────────────── */
+[data-style="neumorphic"] .monitor-modal__card {
+    border-color: transparent;
+    box-shadow: 0 0 0 1px var(--monitor-modal-ring), var(--monitor-modal-shadow);
+}
+
+[data-style="neumorphic"] .monitor-modal__metric,
+[data-style="neumorphic"] .monitor-modal__check {
+    border-color: transparent;
+    box-shadow: var(--monitor-modal-surface-shadow);
+}
+
+/* ── Theme toggle button ────────────────── */
+[data-style="neumorphic"] .theme-toggle {
+    border-color: transparent;
+    box-shadow: var(--neo-shadow-raised-sm);
+    border: none;
+}
+
+[data-style="neumorphic"] .theme-toggle:hover {
+    background: var(--bg-base);
+    box-shadow: none;
+    border: none;
+}
+
+/* ── CustomSelect ────────────────────────── */
+[data-style="neumorphic"] .custom-select-trigger {
+    border: none;
+    border-radius: 14px;
+    box-shadow: var(--neo-shadow-inset-sm);
+    outline: none; 
+}
+
+[data-style="neumorphic"] .custom-select-trigger:focus-visible,
+[data-style="neumorphic"] .custom-select.open .custom-select-trigger {
+    outline: none;
+    border: none;
+    box-shadow: var(--neo-shadow-inset-sm);
+    /* no blue ring */
+}
+
+[data-style="neumorphic"] .custom-select-menu {
+    border-radius: 14px;
+    border-color: var(--border);
+    box-shadow: var(--neo-shadow-raised-md);
+    border-radius: 14px;
+}
+
+[data-style="neumorphic"] .custom-select-option {
+    border-radius: 10px;
+}
+
+/* ── Fix: no blue ring on focus in neumorphic ── */
+[data-style="neumorphic"] .add-monitor-input:focus,
+[data-style="neumorphic"] .dashboard-search:focus,
+[data-style="neumorphic"] .dashboard-settings__input:focus,
+[data-style="neumorphic"] .monitor-modal__edit-input:focus,
+[data-style="neumorphic"] .monitor-modal__input--select { 
+    border: none;
+    outline: none;
+    box-shadow: var(--neo-shadow-inset-sm);
+}
+
+/* ── StyleToggle ─────────────────────────── */
+[data-style="neumorphic"] .style-toggle {
+    border-color: transparent;
+    box-shadow: var(--neo-shadow-raised-sm);
+}
+
+[data-style="neumorphic"] .style-toggle:hover {
+    border-color: transparent;
+    box-shadow: var(--neo-shadow-inset-sm);
+}
+
+/* ── Monitor modal — incident & check rows ── */
+[data-style="neumorphic"] .monitor-modal__timeline-item,
+[data-style="neumorphic"] .monitor-modal__check-row {
+    border: none;
+    border-radius: 14px;
+    box-shadow: var(--neo-shadow-raised-sm);
+}
+
+/* ── Monitor modal — Edit / Close buttons ── */
+[data-style="neumorphic"] .monitor-modal__button {
+    border: none;
+    border-radius: 14px;
+    box-shadow: var(--neo-shadow-raised-sm);
+    transition: box-shadow 0.2s ease;
+}
+
+[data-style="neumorphic"] .monitor-modal__button:hover {
+    box-shadow: var(--neo-shadow-inset-sm);
+}
+
+[data-style="neumorphic"] .monitor-modal__button--primary:hover {
+    filter: brightness(1.05);
+}
+
+[data-style="neumorphic"] .monitor-modal__input--select {
+    flex: 0 0 140px;
+    width: 140px;
+}
+
+[data-style="neumorphic"] .monitor-modal__input--select .custom-select-trigger {
+  width: 100%;
+  border-radius: 14px;
+}

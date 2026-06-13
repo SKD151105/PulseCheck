@@ -8,6 +8,7 @@ import Skeleton from "../components/Skeleton";
 import AnalyticsSection from "../components/AnalyticsSection";
 import ConfirmDialog from "../components/ConfirmDialog";
 import ThemeToggle from "../components/ThemeToggle";
+import StyleToggle from "../components/StyleToggle";
 import { useToast } from "../context/ToastContext";
 import { useSocketContext } from "../context/SocketContext";
 import { useAuth } from "../context/AuthContext";
@@ -27,7 +28,9 @@ const EmptyState = () => (
       />
     </svg>
     <div className="empty-state__title">No monitors yet</div>
-    <div className="empty-state__text">Add your first URL above to start monitoring.</div>
+    <div className="empty-state__text">
+      Add your first URL above to start monitoring.
+    </div>
   </div>
 );
 
@@ -46,7 +49,10 @@ export default function Dashboard() {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isBillingLoading, setIsBillingLoading] = useState(false);
-  const [alertSettings, setAlertSettings] = useState({ enabled: false, email: "" });
+  const [alertSettings, setAlertSettings] = useState({
+    enabled: false,
+    email: "",
+  });
   const [alertHistory, setAlertHistory] = useState([]);
   const [isSavingAlerts, setIsSavingAlerts] = useState(false);
   const analyticsTimerRef = useRef(null);
@@ -76,7 +82,9 @@ export default function Dashboard() {
       setMonitors(response.data.monitors);
       setNetworkError("");
     } catch (error) {
-      setNetworkError(error.response?.data?.message || "Unable to load monitors");
+      setNetworkError(
+        error.response?.data?.message || "Unable to load monitors",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +96,9 @@ export default function Dashboard() {
       setAnalytics(response.data.analytics);
       setNetworkError("");
     } catch (error) {
-      setNetworkError(error.response?.data?.message || "Unable to load analytics");
+      setNetworkError(
+        error.response?.data?.message || "Unable to load analytics",
+      );
     }
   };
 
@@ -100,7 +110,8 @@ export default function Dashboard() {
       addToast({
         type: "error",
         title: "Alert settings unavailable",
-        message: error.response?.data?.message || "Unable to load alert settings",
+        message:
+          error.response?.data?.message || "Unable to load alert settings",
       });
     }
   };
@@ -113,7 +124,8 @@ export default function Dashboard() {
       addToast({
         type: "error",
         title: "Alert history unavailable",
-        message: error.response?.data?.message || "Unable to load alert history",
+        message:
+          error.response?.data?.message || "Unable to load alert history",
       });
     }
   };
@@ -142,8 +154,12 @@ export default function Dashboard() {
     loadAlertSettings();
     loadAlertHistory();
 
-    const billingStatus = new URLSearchParams(window.location.search).get("billing");
-    const sessionId = new URLSearchParams(window.location.search).get("session_id");
+    const billingStatus = new URLSearchParams(window.location.search).get(
+      "billing",
+    );
+    const sessionId = new URLSearchParams(window.location.search).get(
+      "session_id",
+    );
 
     if (billingStatus === "success") {
       Promise.resolve(syncBillingPlan(sessionId))
@@ -162,7 +178,8 @@ export default function Dashboard() {
             addToast({
               type: "success",
               title: "Checkout complete",
-              message: "Your subscription will update as soon as Stripe confirms it.",
+              message:
+                "Your subscription will update as soon as Stripe confirms it.",
             });
           });
         })
@@ -214,7 +231,9 @@ export default function Dashboard() {
 
     const handleMonitorChecked = (payload) => {
       setMonitors((current) =>
-        current.map((monitor) => (monitor.id === payload.id ? { ...monitor, ...payload } : monitor))
+        current.map((monitor) =>
+          monitor.id === payload.id ? { ...monitor, ...payload } : monitor,
+        ),
       );
       setFlashMap((current) => ({ ...current, [payload.id]: Date.now() }));
 
@@ -230,7 +249,8 @@ export default function Dashboard() {
     const handleStatusChange = (payload) => {
       addToast({
         type: payload.status === "UP" ? "success" : "error",
-        title: payload.status === "UP" ? "Monitor recovered" : "Monitor is down",
+        title:
+          payload.status === "UP" ? "Monitor recovered" : "Monitor is down",
         message: payload.url,
       });
 
@@ -303,7 +323,8 @@ export default function Dashboard() {
       addToast({
         type: "error",
         title: "Checkout unavailable",
-        message: error.response?.data?.message || "Unable to start Stripe checkout",
+        message:
+          error.response?.data?.message || "Unable to start Stripe checkout",
       });
       setIsBillingLoading(false);
     }
@@ -320,25 +341,33 @@ export default function Dashboard() {
       addToast({
         type: "success",
         title: "Alert settings saved",
-        message: response.data.settings.enabled ? "Email alerts are enabled." : "Email alerts are disabled.",
+        message: response.data.settings.enabled
+          ? "Email alerts are enabled."
+          : "Email alerts are disabled.",
       });
     } catch (error) {
       addToast({
         type: "error",
         title: "Save failed",
-        message: error.response?.data?.message || "Unable to update alert settings",
+        message:
+          error.response?.data?.message || "Unable to update alert settings",
       });
     } finally {
       setIsSavingAlerts(false);
     }
   };
 
-  const bannerMessage = networkError || (hasConnected && !isConnected ? "Connection lost. Reconnecting..." : "");
-  const totalPages = Math.max(1, Math.ceil(monitors.length / MONITORS_PER_PAGE));
+  const bannerMessage =
+    networkError ||
+    (hasConnected && !isConnected ? "Connection lost. Reconnecting..." : "");
+  const totalPages = Math.max(
+    1,
+    Math.ceil(monitors.length / MONITORS_PER_PAGE),
+  );
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const visibleMonitors = monitors.slice(
     (safeCurrentPage - 1) * MONITORS_PER_PAGE,
-    safeCurrentPage * MONITORS_PER_PAGE
+    safeCurrentPage * MONITORS_PER_PAGE,
   );
 
   return (
@@ -349,16 +378,26 @@ export default function Dashboard() {
           <header className="dashboard-hero">
             <div>
               <div className="dashboard-hero__eyebrow">Uptime monitoring</div>
-              <h1 className="dashboard-hero__title">Keep track of every endpoint from one clean workspace.</h1>
+              <h1 className="dashboard-hero__title">
+                Keep track of every endpoint from one clean workspace.
+              </h1>
               <p className="dashboard-hero__text">
-                Create monitors, watch response times, and catch outages in real time.
+                Create monitors, watch response times, and catch outages in real
+                time.
               </p>
             </div>
             <div className="dashboard-hero__meta">
               <div className="dashboard-hero__theme-toggle">
-                <ThemeToggle />
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <StyleToggle />
+                  <ThemeToggle />
+                </div>
               </div>
-              <span className={`dashboard-hero__plan dashboard-hero__plan--${user?.plan?.toLowerCase()}`}>
+              <span
+                className={`dashboard-hero__plan dashboard-hero__plan--${user?.plan?.toLowerCase()}`}
+              >
                 {user?.plan === "PRO" ? "PRO" : "FREE"}
               </span>
               {user?.plan !== "PRO" ? (
@@ -376,13 +415,22 @@ export default function Dashboard() {
 
           <StatBar monitors={monitors} />
 
-          {bannerMessage ? <div className="dashboard-banner">{bannerMessage}</div> : null}
+          {bannerMessage ? (
+            <div className="dashboard-banner">{bannerMessage}</div>
+          ) : null}
 
-          <AddMonitorForm plan={user?.plan} isSubmitting={isSubmitting} onSubmit={handleCreateMonitor} />
+          <AddMonitorForm
+            plan={user?.plan}
+            isSubmitting={isSubmitting}
+            onSubmit={handleCreateMonitor}
+          />
 
           <AnalyticsSection analytics={analytics} isLoading={isLoading} />
 
-          <section className="dashboard-section dashboard-settings" id="notifications">
+          <section
+            className="dashboard-section dashboard-settings"
+            id="notifications"
+          >
             <div className="dashboard-settings__panel">
               <div>
                 <div className="dashboard-section__heading">Email alerts</div>
@@ -390,13 +438,19 @@ export default function Dashboard() {
                   Choose where outage and recovery alerts should be sent.
                 </p>
               </div>
-              <form className="dashboard-settings__form" onSubmit={handleSaveAlertSettings}>
+              <form
+                className="dashboard-settings__form"
+                onSubmit={handleSaveAlertSettings}
+              >
                 <label className="dashboard-settings__toggle">
                   <input
                     type="checkbox"
                     checked={alertSettings.enabled}
                     onChange={(event) =>
-                      setAlertSettings((current) => ({ ...current, enabled: event.target.checked }))
+                      setAlertSettings((current) => ({
+                        ...current,
+                        enabled: event.target.checked,
+                      }))
                     }
                   />
                   <span>Email alerts enabled</span>
@@ -406,28 +460,44 @@ export default function Dashboard() {
                   type="email"
                   value={alertSettings.email}
                   onChange={(event) =>
-                    setAlertSettings((current) => ({ ...current, email: event.target.value }))
+                    setAlertSettings((current) => ({
+                      ...current,
+                      email: event.target.value,
+                    }))
                   }
                   placeholder={user?.email || "alerts@example.com"}
                 />
-                <button className="dashboard-settings__button" type="submit" disabled={isSavingAlerts}>
+                <button
+                  className="dashboard-settings__button"
+                  type="submit"
+                  disabled={isSavingAlerts}
+                >
                   {isSavingAlerts ? "Saving..." : "Save email"}
                 </button>
               </form>
             </div>
 
             <div className="dashboard-settings__panel">
-              <div className="dashboard-section__heading">Notification history</div>
+              <div className="dashboard-section__heading">
+                Notification history
+              </div>
               {alertHistory.length ? (
                 <div className="dashboard-settings__history">
                   {alertHistory.map((notification) => (
-                    <div className="dashboard-settings__history-row" key={notification.id}>
+                    <div
+                      className="dashboard-settings__history-row"
+                      key={notification.id}
+                    >
                       <div>
-                        <div className="dashboard-settings__history-title" title={notification.url}>
+                        <div
+                          className="dashboard-settings__history-title"
+                          title={notification.url}
+                        >
                           {notification.url}
                         </div>
                         <div className="dashboard-settings__history-meta">
-                          {notification.event} - {notification.recipientEmail || "No recipient"}
+                          {notification.event} -{" "}
+                          {notification.recipientEmail || "No recipient"}
                         </div>
                       </div>
                       <span
@@ -439,7 +509,9 @@ export default function Dashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="dashboard-settings__empty">No email alert activity yet.</div>
+                <div className="dashboard-settings__empty">
+                  No email alert activity yet.
+                </div>
               )}
             </div>
           </section>
@@ -483,7 +555,9 @@ export default function Dashboard() {
                       className="dashboard-pagination__button"
                       type="button"
                       disabled={safeCurrentPage === 1}
-                      onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                      onClick={() =>
+                        setCurrentPage((page) => Math.max(1, page - 1))
+                      }
                     >
                       Previous
                     </button>
@@ -494,7 +568,9 @@ export default function Dashboard() {
                       className="dashboard-pagination__button"
                       type="button"
                       disabled={safeCurrentPage === totalPages}
-                      onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                      onClick={() =>
+                        setCurrentPage((page) => Math.min(totalPages, page + 1))
+                      }
                     >
                       Next
                     </button>

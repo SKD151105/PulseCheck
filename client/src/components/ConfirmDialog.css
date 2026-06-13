@@ -14,7 +14,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--bg-card);
-  box-shadow: var(--shadow-modal);
+  /* box-shadow: var(--shadow-modal); */
 }
 
 .confirm-dialog__title {
@@ -27,6 +27,7 @@
 .confirm-dialog__text {
   margin: 8px 0 0;
   color: var(--text-secondary);
+  overflow: hidden;
 }
 
 .confirm-dialog__actions {

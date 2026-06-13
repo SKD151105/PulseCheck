@@ -112,6 +112,8 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-section__heading span {
@@ -161,6 +163,8 @@
   border-radius: 10px;
   background: var(--bg-card);
   min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-settings__text {

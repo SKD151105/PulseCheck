@@ -68,11 +68,15 @@
 }
 
 .analytics-panel--table {
+  position: relative;
+  z-index: 1;
   margin-top: 12px;
   width: 100%;
 }
 
 .analytics-panel--stacked {
+  position: relative;
+  z-index: 1;
   margin-top: 12px;
 }
 

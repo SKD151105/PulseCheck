@@ -3,6 +3,7 @@ import api from "../services/api";
 import { useToast } from "../context/ToastContext";
 import LineChart from "./LineChart";
 import "./MonitorDetailsModal.css";
+import CustomSelect from "./CustomSelect";
 
 const INTERVAL_OPTIONS = [1, 2, 5, 10, 30];
 
@@ -58,7 +59,13 @@ const DetailMetric = ({ label, value }) => (
   </div>
 );
 
-export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, onUpdated }) {
+export default function MonitorDetailsModal({
+  monitorId,
+  plan,
+  socket,
+  onClose,
+  onUpdated,
+}) {
   const { addToast } = useToast();
   const [details, setDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -76,7 +83,9 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
       });
       setError("");
     } catch (loadError) {
-      setError(loadError.response?.data?.message || "Unable to load monitor details");
+      setError(
+        loadError.response?.data?.message || "Unable to load monitor details",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -123,7 +132,9 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
       onUpdated(response.data.monitor);
       loadDetails();
     } catch (submitError) {
-      setError(submitError.response?.data?.message || "Unable to update monitor");
+      setError(
+        submitError.response?.data?.message || "Unable to update monitor",
+      );
     }
   };
 
@@ -131,18 +142,29 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
     return null;
   }
 
-  const allowedIntervals = plan === "PRO" ? INTERVAL_OPTIONS : INTERVAL_OPTIONS.filter((value) => value >= 5);
+  const allowedIntervals =
+    plan === "PRO"
+      ? INTERVAL_OPTIONS
+      : INTERVAL_OPTIONS.filter((value) => value >= 5);
 
   return (
     <div className="monitor-modal" onClick={onClose}>
-      <div className="monitor-modal__card" onClick={(event) => event.stopPropagation()}>
+      <div
+        className="monitor-modal__card"
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="monitor-modal__header">
           <div>
             <div className="monitor-modal__eyebrow">Monitor details</div>
-            <h2 className="monitor-modal__title">{details?.monitor.url || "Loading monitor"}</h2>
+            <h2 className="monitor-modal__title">
+              {details?.monitor.url || "Loading monitor"}
+            </h2>
           </div>
           <div className="monitor-modal__actions">
-            <button className="monitor-modal__button" onClick={() => setIsEditing((current) => !current)}>
+            <button
+              className="monitor-modal__button"
+              onClick={() => setIsEditing((current) => !current)}
+            >
               {isEditing ? "Cancel" : "Edit"}
             </button>
             <button className="monitor-modal__button" onClick={onClose}>
@@ -151,8 +173,12 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
           </div>
         </div>
 
-        {isLoading ? <div className="monitor-modal__empty">Loading monitor details...</div> : null}
-        {!isLoading && error ? <div className="monitor-modal__error">{error}</div> : null}
+        {isLoading ? (
+          <div className="monitor-modal__empty">Loading monitor details...</div>
+        ) : null}
+        {!isLoading && error ? (
+          <div className="monitor-modal__error">{error}</div>
+        ) : null}
 
         {!isLoading && details ? (
           <>
@@ -162,31 +188,64 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
                   className="monitor-modal__input"
                   type="url"
                   value={form.url}
-                  onChange={(event) => setForm((current) => ({ ...current, url: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      url: event.target.value,
+                    }))
+                  }
                   required
                 />
-                <select
-                  className="monitor-modal__input monitor-modal__input--select"
+                <CustomSelect
+                  className="monitor-modal__input--select"
                   value={form.interval}
-                  onChange={(event) => setForm((current) => ({ ...current, interval: event.target.value }))}
+                  onChange={(val) =>
+                    setForm((current) => ({ ...current, interval: val }))
+                  }
+                  options={INTERVAL_OPTIONS.map((value) => ({
+                    value: String(value),
+                    label: `${value}m`,
+                    disabled: !allowedIntervals.includes(value),
+                  }))}
+                />  
+                <button
+                  className="monitor-modal__button monitor-modal__button--primary"
+                  type="submit"
                 >
-                  {INTERVAL_OPTIONS.map((value) => (
-                    <option key={value} value={value} disabled={!allowedIntervals.includes(value)}>
-                      {value}m
-                    </option>
-                  ))}
-                </select>
-                <button className="monitor-modal__button monitor-modal__button--primary" type="submit">
                   Save changes
                 </button>
               </form>
             ) : null}
 
             <div className="monitor-modal__metrics">
-              <DetailMetric label="Uptime 24h" value={details.summary.uptime24h !== null ? `${details.summary.uptime24h}%` : "--"} />
-              <DetailMetric label="Uptime 7d" value={details.summary.uptime7d !== null ? `${details.summary.uptime7d}%` : "--"} />
-              <DetailMetric label="Avg response 24h" value={details.summary.avgResponse24h !== null ? `${details.summary.avgResponse24h}ms` : "--"} />
-              <DetailMetric label="Incidents" value={details.summary.incidentCount} />
+              <DetailMetric
+                label="Uptime 24h"
+                value={
+                  details.summary.uptime24h !== null
+                    ? `${details.summary.uptime24h}%`
+                    : "--"
+                }
+              />
+              <DetailMetric
+                label="Uptime 7d"
+                value={
+                  details.summary.uptime7d !== null
+                    ? `${details.summary.uptime7d}%`
+                    : "--"
+                }
+              />
+              <DetailMetric
+                label="Avg response 24h"
+                value={
+                  details.summary.avgResponse24h !== null
+                    ? `${details.summary.avgResponse24h}ms`
+                    : "--"
+                }
+              />
+              <DetailMetric
+                label="Incidents"
+                value={details.summary.incidentCount}
+              />
             </div>
 
             <div className="monitor-modal__charts">
@@ -195,7 +254,10 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
                 subtitle="Last 24 hours"
                 suffix="ms"
                 points={details.trends.response24h.map((point) => ({
-                  label: new Date(point.checkedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                  label: new Date(point.checkedAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }),
                   value: point.responseTime,
                 }))}
               />
@@ -211,26 +273,39 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
             </div>
 
             <div className="monitor-modal__section">
-              <div className="monitor-modal__section-title">Incident history</div>
+              <div className="monitor-modal__section-title">
+                Incident history
+              </div>
               {details.incidents.length ? (
                 <div className="monitor-modal__timeline">
                   {details.incidents.map((incident) => (
-                    <div className="monitor-modal__timeline-item" key={incident.id}>
+                    <div
+                      className="monitor-modal__timeline-item"
+                      key={incident.id}
+                    >
                       <div>
                         <div className="monitor-modal__timeline-status">
-                          {incident.isOpen ? "Active outage" : "Resolved outage"}
+                          {incident.isOpen
+                            ? "Active outage"
+                            : "Resolved outage"}
                         </div>
                         <div className="monitor-modal__timeline-meta">
                           Started {formatRelativeTime(incident.startedAt)}
-                          {incident.resolvedAt ? `, resolved ${formatRelativeTime(incident.resolvedAt)}` : ""}
+                          {incident.resolvedAt
+                            ? `, resolved ${formatRelativeTime(incident.resolvedAt)}`
+                            : ""}
                         </div>
                       </div>
-                      <div className="monitor-modal__timeline-duration">{formatDuration(incident.durationMs)}</div>
+                      <div className="monitor-modal__timeline-duration">
+                        {formatDuration(incident.durationMs)}
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="monitor-modal__empty">No incidents recorded for this monitor yet.</div>
+                <div className="monitor-modal__empty">
+                  No incidents recorded for this monitor yet.
+                </div>
               )}
             </div>
 
@@ -239,10 +314,16 @@ export default function MonitorDetailsModal({ monitorId, plan, socket, onClose, 
               <div className="monitor-modal__checks">
                 {details.recentChecks.map((check) => (
                   <div className="monitor-modal__check-row" key={check.id}>
-                    <span className={`monitor-modal__check-status monitor-modal__check-status--${check.status.toLowerCase()}`}>
+                    <span
+                      className={`monitor-modal__check-status monitor-modal__check-status--${check.status.toLowerCase()}`}
+                    >
                       {check.status}
                     </span>
-                    <span>{check.responseTime !== null ? `${check.responseTime}ms` : "Failed"}</span>
+                    <span>
+                      {check.responseTime !== null
+                        ? `${check.responseTime}ms`
+                        : "Failed"}
+                    </span>
                     <span>{formatRelativeTime(check.checkedAt)}</span>
                   </div>
                 ))}

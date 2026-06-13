@@ -3,7 +3,7 @@
   top: 0;
   flex: 0 0 clamp(220px, 14.5vw, 244px);
   width: clamp(220px, 14.5vw, 244px);
-  height: 100vh;
+  height: calc(100vh / var(--root-zoom));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -228,6 +228,13 @@
   .sidebar__brand,
   .sidebar__nav,
   .sidebar__footer {
+    display: none;
+  }
+}
+
+@media (max-width: 410px) {
+  /* Hides the 'PulseCheck' text but leaves the green dot */
+  .sidebar__mobile-brand span:not(.sidebar__brand-dot) {
     display: none;
   }
 }

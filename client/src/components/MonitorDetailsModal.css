@@ -12,7 +12,8 @@
 
 .monitor-modal__card {
   width: min(1080px, 100%);
-  max-height: calc(100vh - 48px);
+  height: 82vh;               
+  max-height: 780px;
   overflow: auto;
   padding: 24px 32px 24px 24px;
   scrollbar-gutter: stable;
@@ -92,6 +93,7 @@
 
 .monitor-modal__input--select {
   flex: 0 0 140px;
+  border-radius: 12px;
 }
 
 .monitor-modal__metrics {
@@ -219,4 +221,12 @@
   .monitor-modal__button {
     width: 100%;
   }
+}
+
+.monitor-modal__input--select .custom-select-trigger {
+  border-radius: 8px;
+}
+
+.monitor-modal__input--select .custom-select-menu {
+  border-radius: 8px;
 }

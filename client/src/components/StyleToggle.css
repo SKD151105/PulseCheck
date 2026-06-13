@@ -1,0 +1,19 @@
+.style-toggle {
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+}
+
+.style-toggle:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+}

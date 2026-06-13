@@ -18,9 +18,11 @@
   align-items: center;
 }
 
-.add-monitor-input,
-.add-monitor-select {
+.add-monitor-input {
+  flex: 1 1 260px;
+  width: 100%;
   height: 40px;
+  padding: 0 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--bg-input);
@@ -29,30 +31,20 @@
   min-width: 0;
 }
 
-.add-monitor-input {
-  flex: 1 1 260px;
-  width: 100%;
-  padding: 0 12px;
-  height: 40px;
-  min-height: 40px;
-  max-height: 40px;
-  line-height: 40px;
-}
-
 .add-monitor-input::placeholder {
   color: var(--text-muted);
 }
 
-.add-monitor-select {
-  width: 140px;
-  padding: 0 12px;
-}
-
-.add-monitor-input:focus,
-.add-monitor-select:focus {
+.add-monitor-input:focus {
   outline: none;
   border-color: var(--border-focus);
   box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.15);
+}
+
+/* wrapper div — only sets width, CustomSelect.css handles visuals */
+.add-monitor-select {
+  width: 140px;
+  flex-shrink: 0;
 }
 
 .add-monitor-button {
@@ -91,8 +83,10 @@
     flex-direction: column;
   }
 
+  .add-monitor-input,
   .add-monitor-select,
   .add-monitor-button {
     width: 100%;
+    flex: none;
   }
 }

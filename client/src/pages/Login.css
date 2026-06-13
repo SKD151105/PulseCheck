@@ -1,4 +1,5 @@
 [data-theme="dark"] .auth-page {
+  box-sizing: border-box;
   background:
     radial-gradient(circle at 12% 12%, rgba(88, 166, 255, 0.22), transparent 36%),
     radial-gradient(circle at 85% 20%, rgba(88, 166, 255, 0.18), transparent 40%),
@@ -11,11 +12,16 @@
     0 24px 60px rgba(0, 0, 0, 0.45),
     0 8px 24px rgba(88, 166, 255, 0.12);
 }
+
 .auth-page {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
+  width: 100%;
+  min-height: calc(100vh / var(--root-zoom));
+  min-height: calc(100dvh / var(--root-zoom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 24px;
+  box-sizing: border-box;
   background:
     radial-gradient(circle at 12% 12%, rgba(199, 210, 254, 0.6), transparent 48%),
     radial-gradient(circle at 88% 20%, rgba(199, 210, 254, 0.55), transparent 50%),
@@ -30,7 +36,7 @@
   padding: 32px 40px;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: var(--bg-card);
+  background: var(--bg-authcard);
   box-shadow:
     0 24px 60px rgba(64, 99, 235, 0.16),
     0 8px 24px rgba(15, 23, 42, 0.08);
@@ -225,6 +231,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  max-width: 100%;
 }
 
 .auth-social__loading {
@@ -240,4 +247,70 @@
   background: var(--bg-input);
   color: var(--text-secondary);
   font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+    width: 100%;
+  }
+
+  .auth-brand { 
+    font-size: 18px; 
+  }
+
+  .auth-title {
+    margin-top: 14px;
+    margin-bottom: 18px;
+    font-size: 14px;
+  }
+
+  .auth-field { 
+    margin-bottom: 12px; 
+  }
+
+  .auth-field input,
+  .auth-submit {
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .auth-link-row {
+    font-size: 13px;
+    margin-top: 14px;
+    white-space: nowrap;
+  }
+
+  .auth-divider { 
+    margin: 12px 0; 
+  }
+  
+  .auth-checkbox { 
+    font-size: 13px; 
+  }
+
+  /* This will forcibly shrink the entire button container and everything inside it */
+  .auth-social__button {
+    transform: scale(0.85);
+    transform-origin: center center;
+    /* Negative margin to pull the "OR" divider closer if the scale creates too much whitespace */
+    margin-bottom: -4px; 
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-card { 
+    padding: 20px 14px; 
+  }
+
+  .auth-link-row {
+    white-space: normal;
+    font-size: 12px;
+  }
+  
+  /* Shrink a bit more on ultra-tiny screens */
+  .auth-social__button {
+    transform: scale(0.80);
+  }
 }

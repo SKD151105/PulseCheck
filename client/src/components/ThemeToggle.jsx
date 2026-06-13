@@ -33,6 +33,8 @@ export default function ThemeToggle() {
     <button
       className="theme-toggle"
       type="button"
+      onMouseUp={e => e.currentTarget.blur()}
+      style={{ outline: "none" }}
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       title={isDark ? "Light theme" : "Dark theme"}
