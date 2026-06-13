@@ -37,6 +37,7 @@ PulseCheck is built for makers who need a clean, reliable visibility layer for t
 - Monitor uptime and response time with minimal configuration.
 - Receive realtime status updates without dashboard refresh.
 - Enforce plan limits and interval rules in a clear, auditable way.
+- Personalize the workspace with interactive UI style toggles (Standard & Neumorphic).
 
 ## Feature Highlights
 
@@ -48,7 +49,7 @@ PulseCheck is built for makers who need a clean, reliable visibility layer for t
 | Telemetry | Check logs with response timing | Status history and latency tracking |
 | Realtime | Socket.io status updates | Live monitor status changes per user |
 | Performance | Redis rate limiting and caching | Throttled auth and cached monitor lists |
-| UI | Dashboard with skeleton states | Fast feedback and custom toasts |
+| UI & Theming | Dashboard with style customization | Fast feedback, custom toasts, and a toggle between modern flat and Neumorphic design themes |
 
 ## Realtime Monitoring Flow
 
@@ -260,6 +261,7 @@ Webhook event types:
 - FREE plan: max 5 monitors, minimum 5 minute interval.
 - PRO plan: max 50 monitors, minimum 1 minute interval.
 - Sidebar navigation scrolls between dashboard sections without changing the URL.
+- **UI Styling:** Users can toggle between standard and Neumorphic design themes, instantly altering the visual layout without requiring a page reload.
 
 ## Roadmap
 
