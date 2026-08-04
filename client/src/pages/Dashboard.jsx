@@ -420,7 +420,7 @@ export default function Dashboard() {
           ) : null}
 
           <AddMonitorForm
-            plan={user?.plan}
+            plan={user?.plan} 
             isSubmitting={isSubmitting}
             onSubmit={handleCreateMonitor}
           />

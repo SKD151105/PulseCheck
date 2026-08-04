@@ -1,0 +1,202 @@
+.startup-screen {
+  width: 100%;
+  min-height: calc(100vh / var(--root-zoom));
+  min-height: calc(100dvh / var(--root-zoom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(199, 210, 254, 0.6), transparent 48%),
+    radial-gradient(circle at 88% 20%, rgba(199, 210, 254, 0.55), transparent 50%),
+    radial-gradient(circle at 50% 40%, #ffffff 0%, #ffffff 45%, #eef2ff 78%, #e0e7ff 100%),
+    radial-gradient(#dbe4ff 1px, transparent 1px);
+  background-size: auto, auto, auto, 16px 16px;
+}
+
+[data-theme="dark"] .startup-screen {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(88, 166, 255, 0.22), transparent 36%),
+    radial-gradient(circle at 85% 20%, rgba(88, 166, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 40% 80%, rgba(88, 166, 255, 0.12), transparent 45%),
+    linear-gradient(180deg, #0d1117 0%, #0b0f14 100%);
+}
+
+.startup-screen__card {
+  width: min(100%, 430px);
+  padding: 30px 32px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--bg-authcard) 92%, transparent);
+  box-shadow:
+    0 24px 60px rgba(64, 99, 235, 0.16),
+    0 8px 24px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+[data-theme="dark"] .startup-screen__card {
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 8px 24px rgba(88, 166, 255, 0.12);
+}
+
+.startup-screen__brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.startup-screen__pulse {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(64, 99, 235, 0.08);
+  overflow: hidden;
+}
+
+.startup-screen__pulse span {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.startup-screen__pulse span:nth-child(1) {
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--status-up));
+  box-shadow: 0 0 0 10px rgba(64, 99, 235, 0.08);
+}
+
+.startup-screen__pulse span:nth-child(2),
+.startup-screen__pulse span:nth-child(3) {
+  border: 1px solid rgba(64, 99, 235, 0.2);
+  animation: startup-ripple 1.8s ease-out infinite;
+}
+
+.startup-screen__pulse span:nth-child(2) {
+  width: 28px;
+  height: 28px;
+}
+
+.startup-screen__pulse span:nth-child(3) {
+  width: 40px;
+  height: 40px;
+  animation-delay: 0.3s;
+}
+
+.startup-screen__eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.startup-screen__name {
+  margin-top: 2px;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.startup-screen__body {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.startup-screen__status {
+  min-height: 44px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.startup-screen__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(64, 99, 235, 0.14);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: startup-spin 0.8s linear infinite;
+}
+
+.startup-screen__retry {
+  width: fit-content;
+  min-width: 120px;
+  height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.startup-screen__retry:hover {
+  background: var(--accent-hover);
+}
+
+.startup-screen__retry:active {
+  transform: scale(0.99);
+}
+
+.app-shell {
+  animation: app-shell-fade 220ms ease both;
+}
+
+@keyframes startup-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes startup-ripple {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+}
+
+@keyframes app-shell-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-screen__card {
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .startup-screen__brand {
+    gap: 14px;
+  }
+
+  .startup-screen__pulse {
+    width: 46px;
+    height: 46px;
+  }
+
+  .startup-screen__name {
+    font-size: 21px;
+  }
+}

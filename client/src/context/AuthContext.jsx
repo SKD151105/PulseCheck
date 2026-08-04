@@ -3,15 +3,36 @@ import api, { TOKEN_KEY, setStoredToken } from "../services/api";
 import { connectSocket, disconnectSocket } from "../services/socket";
 
 const AuthContext = createContext(null);
+const BOOTSTRAP_TIMEOUT_MS = 65000;
+
+const isAuthFailure = (error) => {
+  const status = error?.response?.status;
+  return status === 401 || status === 403;
+};
+
+const getBootstrapErrorMessage = (error) => {
+  if (error?.code === "ECONNABORTED") {
+    return "The server is taking longer than expected to respond. Please try again.";
+  }
+
+  return (
+    error?.response?.data?.message ||
+    "Unable to reach PulseCheck right now. Please retry."
+  );
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
+  const [bootstrapError, setBootstrapError] = useState("");
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
+  const [bootstrapAttempt, setBootstrapAttempt] = useState(0);
   const logoutRequestedRef = useRef(false);
+  const bootstrapRequestIdRef = useRef(0);
 
   const persistSession = (nextToken, nextUser) => {
     logoutRequestedRef.current = false;
+    setBootstrapError("");
     setStoredToken(nextToken);
     setToken(nextToken);
     setUser(nextUser);
@@ -19,6 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const clearSession = () => {
+    setBootstrapError("");
     setStoredToken(null);
     setToken(null);
     setUser(null);
@@ -62,25 +84,79 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    let isCurrentRequest = true;
+    const requestId = bootstrapRequestIdRef.current + 1;
+    bootstrapRequestIdRef.current = requestId;
+
     const bootstrap = async () => {
+      setBootstrapError("");
+      setIsBootstrapping(true);
+
       try {
         if (logoutRequestedRef.current) {
           return;
         }
-        const activeToken = token || (await api.post("/auth/refresh")).data.token;
+
+        let activeToken = token;
+
+        if (!activeToken) {
+          const refreshResponse = await api.post(
+            "/auth/refresh",
+            {},
+            { timeout: BOOTSTRAP_TIMEOUT_MS },
+          );
+          activeToken = refreshResponse.data.token;
+        }
+
+        if (!activeToken) {
+          clearSession();
+          return;
+        }
+
         setStoredToken(activeToken);
         setToken(activeToken);
         connectSocket(activeToken);
-        await refreshUser();
-      } catch {
-        clearSession();
+
+        const response = await api.get("/auth/me", {
+          timeout: BOOTSTRAP_TIMEOUT_MS,
+        });
+
+        if (!isCurrentRequest || bootstrapRequestIdRef.current !== requestId) {
+          return;
+        }
+
+        setUser(response.data.user);
+      } catch (error) {
+        if (!isCurrentRequest || bootstrapRequestIdRef.current !== requestId) {
+          return;
+        }
+
+        if (isAuthFailure(error)) {
+          clearSession();
+          return;
+        }
+
+        disconnectSocket();
+        setBootstrapError(getBootstrapErrorMessage(error));
       } finally {
-        setIsBootstrapping(false);
+        if (isCurrentRequest && bootstrapRequestIdRef.current === requestId) {
+          setIsBootstrapping(false);
+        }
       }
     };
 
     bootstrap();
-  }, [token]);
+
+    return () => {
+      isCurrentRequest = false;
+    };
+  }, [bootstrapAttempt]);
+
+  const retryBootstrap = () => {
+    logoutRequestedRef.current = false;
+    setBootstrapError("");
+    setBootstrapAttempt((current) => current + 1);
+  };
 
   return (
     <AuthContext.Provider
@@ -88,11 +164,13 @@ export const AuthProvider = ({ children }) => {
         user,
         token,
         isBootstrapping,
+        bootstrapError,
         register,
         login,
         googleAuth,
         logout,
         refreshUser,
+        retryBootstrap,
         setUser,
       }}
     >
